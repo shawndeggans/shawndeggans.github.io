@@ -1,2 +1,2 @@
 # shawndeggans.github.io
-Shawn Deggans' Blot
+Shawn Deggans' Future Blog
