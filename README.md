@@ -28,7 +28,7 @@ interpret://shawn.deggans/ >> initializing conceptual space...
 
 *Architectures exist in the spaces between intent and implementation*
 
-[25 years of technical metamorphosis](#architecture-excavation)
+[25 years of technical metamorphosis](architecture-excavation.md)
 
 > **Uncovered fragment**: Systems are not built; they emerge from the collision of business aspiration with technical constraint.
 
@@ -49,7 +49,7 @@ interpret://shawn.deggans/ >> initializing conceptual space...
 
 *Knowledge grows like strange flora in forgotten places*
 
-[Active encoding and recall through deliberate ambiguity](#learning-methodology)
+[Active encoding and recall through deliberate ambiguity](learning-methodology.md)
 
 > **Observation journal**: Understanding does not follow a linear path; it spreads like mycelia beneath conscious thought.
 
@@ -77,7 +77,7 @@ interpret://shawn.deggans/ >> initializing conceptual space...
 
 *The observed system changes through the act of observation*
 
-[Domain-driven design as existential practice](#observer-archives)
+[Domain-driven design as existential practice](observer-archives.md)
 
 > **Theoretical framework**: What we call "solutions" are merely temporary configurations of preexisting elements.
 
@@ -101,7 +101,7 @@ Time │    │ Evolution │    │ Platform  │    │ Systems   │
 
 *Digital archaeology: unearthing the artifacts of past technical civilizations*
 
-[The persistence of decisions long forgotten](#temporal-recursion)
+[The persistence of decisions long forgotten](temporal-recursion.md)
 
 > **Excavated insight**: Every system contains the fossilized remnants of the thinking that created it.
 
