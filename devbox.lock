@@ -1,0 +1,56 @@
+{
+  "lockfile_version": "1",
+  "packages": {
+    "github:NixOS/nixpkgs/nixpkgs-unstable": {
+      "resolved": "github:NixOS/nixpkgs/b3582c75c7f21ce0b429898980eddbbf05c68e55?lastModified=1746576598&narHash=sha256-FshoQvr6Aor5SnORVvh%2FZdJ1Sa2U4ZrIMwKBX5k2wu0%3D"
+    },
+    "vscode@latest": {
+      "last_modified": "2025-04-23T03:04:08Z",
+      "resolved": "github:NixOS/nixpkgs/507b63021ada5fee621b6ca371c4fca9ca46f52c#vscode",
+      "source": "devbox-search",
+      "version": "1.99.3",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/pb004z2arwmfg6pj1faxswf7hsgii7wh-vscode-1.99.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/pb004z2arwmfg6pj1faxswf7hsgii7wh-vscode-1.99.3"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/8kc1hvyc9lz3bagkidw87ifdkdl0ijxq-vscode-1.99.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/8kc1hvyc9lz3bagkidw87ifdkdl0ijxq-vscode-1.99.3"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/wx7y65w4p0wg97qipal8dmvc54i873w1-vscode-1.99.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/wx7y65w4p0wg97qipal8dmvc54i873w1-vscode-1.99.3"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/a2mwjizacw89bavfpfgss0z9fclh99xk-vscode-1.99.3",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/a2mwjizacw89bavfpfgss0z9fclh99xk-vscode-1.99.3"
+        }
+      }
+    }
+  }
+}
