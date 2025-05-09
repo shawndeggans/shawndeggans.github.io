@@ -173,7 +173,7 @@ Databricks::Data::Engineer(Associate)
 
 *What appears as emptiness contains possibility*
 
-[Interact with absence to reveal presence](#void-exploration)
+[Interact with absence to reveal presence](void-exploration.md)
 
 ---
 
