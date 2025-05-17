@@ -43,6 +43,9 @@ jobs:
         run: npm run build
         working-directory: ./digital-garden
         
+      - name: List build directory (debug)
+        run: ls -la ./digital-garden/build
+        
       - name: Setup Pages
         uses: actions/configure-pages@v4
         
