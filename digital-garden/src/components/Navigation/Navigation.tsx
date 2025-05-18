@@ -34,7 +34,7 @@ export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
     <nav className={`navigation ${className}`}>
       <div className="navigation-brand">
         <Link to="/" className="brand-link">
-          <span className="brand-text">Digital Garden</span>
+          <span className="brand-text">Curiouser and Curiouser!</span>
         </Link>
       </div>
       
