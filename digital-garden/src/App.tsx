@@ -1,6 +1,7 @@
 import React from 'react';
 import { HashRouter as Router } from 'react-router-dom';
 import AppRoutes from './routes';
+// import Navigation from './components/Navigation/Navigation'; // REMOVE this import
 import './styles/global.css';
 
 // Using HashRouter for GitHub Pages compatibility with Create React App

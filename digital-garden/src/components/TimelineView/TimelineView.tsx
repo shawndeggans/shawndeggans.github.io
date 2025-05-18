@@ -71,11 +71,6 @@ export const TimelineView: React.FC = () => {
   }
   return (
     <div className="timeline-view">
-      <div className="timeline-header">
-        <h1>Content Timeline</h1>
-        <p>Explore content chronologically</p>
-      </div>
-
       <TimelineFilters
         filters={filters}
         grouping={grouping}
