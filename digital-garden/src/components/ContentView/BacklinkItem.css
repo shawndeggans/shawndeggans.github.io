@@ -1,0 +1,106 @@
+.backlink-item {
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  background: var(--color-surface);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.backlink-item:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.1);
+  transform: translateY(-1px);
+}
+
+.backlink-item-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.backlink-item-title {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.4;
+  flex: 1;
+  transition: color 0.2s ease;
+}
+
+.backlink-item-title:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+}
+
+.backlink-item-date {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.backlink-item-excerpt {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.backlink-item-context {
+  background: var(--color-background);
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  margin-bottom: var(--spacing-sm);
+  font-size: 0.875rem;
+}
+
+.backlink-item-context-label {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-right: var(--spacing-xs);
+}
+
+.backlink-item-context-text {
+  color: var(--color-text-primary);
+  font-style: italic;
+}
+
+.backlink-item-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+.backlink-item-tag {
+  font-size: 0.75rem;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border-radius: var(--border-radius-sm);
+  font-weight: 500;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .backlink-item {
+    padding: var(--spacing-sm);
+  }
+
+  .backlink-item-header {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
+  .backlink-item-title {
+    font-size: 0.95rem;
+  }
+
+  .backlink-item-date {
+    align-self: flex-start;
+  }
+}

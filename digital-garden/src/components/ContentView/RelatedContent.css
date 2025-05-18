@@ -1,0 +1,120 @@
+.related-content {
+  margin-top: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  background: var(--color-background);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.related-content-title {
+  margin: 0 0 var(--spacing-md) 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.related-content-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.related-content-item {
+  padding: var(--spacing-md);
+  background: var(--color-surface);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-border);
+  transition: all 0.2s ease;
+}
+
+.related-content-item:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 4px rgba(52, 152, 219, 0.1);
+}
+
+.related-content-item-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.related-content-icon {
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+.related-content-link {
+  flex: 1;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.related-content-link:hover {
+  text-decoration: underline;
+  color: var(--color-primary-dark);
+}
+
+.related-content-score {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.related-content-excerpt {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.related-content-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.related-content-connection {
+  flex: 1;
+  font-style: italic;
+}
+
+.related-content-date {
+  white-space: nowrap;
+}
+
+.related-content-more {
+  margin-top: var(--spacing-md);
+  margin-bottom: 0;
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  font-size: 0.875rem;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .related-content {
+    padding: var(--spacing-md);
+  }
+
+  .related-content-item {
+    padding: var(--spacing-sm);
+  }
+
+  .related-content-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+}

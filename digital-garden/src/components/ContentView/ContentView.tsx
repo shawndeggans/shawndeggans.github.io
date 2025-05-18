@@ -5,11 +5,46 @@ import remarkGfm from 'remark-gfm';
 import { useContent } from '../../hooks/useContent';
 import { processContentForDisplay, calculateReadingTime } from '../../utils/markdown';
 import './ContentView.css';
+import { useBacklinks } from '../../hooks/useBacklinks';
+import { BacklinkFilters } from '../../types/backlinks';
+import BacklinksSection from './BacklinksSection';
+import RelatedContent from './RelatedContent';
+import './BacklinkPreview.css';
+import './BacklinkItem.css';
+import './BacklinksSection.css';
+import './RelatedContent.css';
 
 const ContentView: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { getContent, loadSingleContent, loading, error } = useContent();
+  const { 
+    getContent, 
+    loadSingleContent, 
+    loading, 
+    error,
+    contentMap,  // Added for backlinks functionality
+    links        // Added for backlinks functionality
+  } = useContent();
   const [content, setContent] = useState(getContent(slug || ''));
+
+  // Enhanced backlinks state
+  const [backlinkFilters, setBacklinkFilters] = useState<BacklinkFilters>({
+    search: '',
+    tags: [],
+    dateRange: {},
+    sortBy: 'date',
+    sortOrder: 'desc',
+  });
+
+  // Enhanced backlinks hook
+  const { incoming, outgoing, related } = useBacklinks(
+    content,
+    contentMap,
+    links.map(link => ({
+      source: link.from || '',
+      target: link.to || ''
+    })),
+    backlinkFilters
+  );
 
   useEffect(() => {
     if (slug) {
@@ -76,34 +111,30 @@ const ContentView: React.FC = () => {
           </div>
         </div>
 
-        {(content.inboundLinks.length > 0 || content.outboundLinks.length > 0) && (
-          <aside className="content-links">
-            {content.outboundLinks.length > 0 && (
-              <div className="outbound-links">
-                <h3>References</h3>
-                <ul>
-                  {content.outboundLinks.map(link => (
-                    <li key={link}>
-                      <Link to={`/content/${link}`}>{link}</Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+        {/* Enhanced backlinks section - replaces the simple links section */}
+        {(incoming.length > 0 || outgoing.length > 0 || related.length > 0) && (
+          <div className="content-backlinks">
+            <BacklinksSection
+              title="Referenced by"
+              backlinks={incoming}
+              contentMap={contentMap}
+              emptyMessage="No content links to this page yet"
+              showContext={true}
+              maxDisplay={5}
+            />
+            
+            <BacklinksSection
+              title="References"
+              backlinks={outgoing}
+              contentMap={contentMap}
+              emptyMessage="This content doesn't link to other pages"
+              maxDisplay={5}
+            />
+            
+            {related.length > 0 && (
+              <RelatedContent related={related} maxDisplay={3} />
             )}
-
-            {content.inboundLinks.length > 0 && (
-              <div className="inbound-links">
-                <h3>Referenced by</h3>
-                <ul>
-                  {content.inboundLinks.map(link => (
-                    <li key={link}>
-                      <Link to={`/content/${link}`}>{link}</Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </aside>
+          </div>
         )}
       </article>
 

@@ -228,3 +228,22 @@
     flex-direction: column;
   }
 }
+
+/* Enhanced backlinks styles */
+.content-backlinks {
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-xl);
+  border-top: 2px solid var(--color-border);
+}
+
+.content-backlinks > * + * {
+  margin-top: var(--spacing-xl);
+}
+
+/* Responsive adjustments for backlinks */
+@media (max-width: 768px) {
+  .content-backlinks {
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+  }
+}
