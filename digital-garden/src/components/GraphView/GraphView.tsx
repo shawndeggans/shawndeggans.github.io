@@ -88,7 +88,6 @@ export const GraphView: React.FC = () => {
   return (
     <div className="graph-view">
       <div className="graph-header">
-        <h1>Content Graph</h1>
         <div className="graph-stats">
           <span>{graphData.nodes.length} nodes</span>
           <span>{graphData.links.length} connections</span>

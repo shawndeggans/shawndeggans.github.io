@@ -1,0 +1,48 @@
+/* Responsive breakpoints for consistent behavior */
+:root {
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+}
+
+/* Mobile-first responsive utilities */
+.container {
+  width: 100%;
+  max-width: var(--breakpoint-xl);
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+/* Mobile navigation adjustments */
+@media (max-width: 768px) {
+  .navigation {
+    height: 56px;
+    padding: 0 var(--spacing-md);
+  }
+  
+  .navigation-links {
+    gap: var(--spacing-sm);
+  }
+  
+  .nav-link {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.9rem;
+  }
+  
+  .breadcrumb {
+    padding: var(--spacing-xs) var(--spacing-md);
+  }
+  
+  /* Ensure views are properly sized on mobile */
+  .layout-content {
+    min-height: calc(100vh - 56px - 40px); /* navigation + breadcrumb */
+  }
+}
+
+/* Desktop adjustments */
+@media (min-width: 768px) {
+  .layout-content {
+    min-height: calc(100vh - 60px - 44px); /* navigation + breadcrumb */
+  }
+}
