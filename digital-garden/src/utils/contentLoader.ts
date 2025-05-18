@@ -1,5 +1,5 @@
 import { ParsedContent, LinkInfo } from '../types/content';
-import { parseMarkdown, convertToSlug } from './markdown';
+import { parseMarkdown } from './markdown';  // Removed unused 'convertToSlug'
 
 /**
  * Load a single markdown file from the public/content directory
@@ -85,19 +85,19 @@ export async function loadAllContent(): Promise<Map<string, ParsedContent>> {
  */
 function processInboundLinks(contentMap: Map<string, ParsedContent>): void {
   // First, clear all inbound links
-  contentMap.forEach(content => {
+  for (const content of Array.from(contentMap.values())) {
     content.inboundLinks = [];
-  });
+  }
   
   // Then populate inbound links based on outbound links
-  contentMap.forEach((content, slug) => {
+  for (const [slug, content] of Array.from(contentMap.entries())) {
     for (const outboundLink of content.outboundLinks) {
       const targetContent = contentMap.get(outboundLink);
       if (targetContent) {
         targetContent.inboundLinks.push(slug);
       }
     }
-  });
+  }
 }
 
 /**
@@ -106,7 +106,7 @@ function processInboundLinks(contentMap: Map<string, ParsedContent>): void {
 export function getAllLinks(contentMap: Map<string, ParsedContent>): LinkInfo[] {
   const links: LinkInfo[] = [];
   
-  contentMap.forEach((content, slug) => {
+  for (const [slug, content] of Array.from(contentMap.entries())) {
     for (const outboundLink of content.outboundLinks) {
       if (contentMap.has(outboundLink)) {
         links.push({
@@ -116,7 +116,7 @@ export function getAllLinks(contentMap: Map<string, ParsedContent>): LinkInfo[] 
         });
       }
     }
-  });
+  }
   
   return links;
 }

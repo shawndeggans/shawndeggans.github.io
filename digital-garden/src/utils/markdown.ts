@@ -1,4 +1,4 @@
-import { ParsedContent, ContentMetadata, LinkInfo } from '../types/content';
+import { ParsedContent, ContentMetadata } from '../types/content';  // Removed unused 'LinkInfo'
 
 // Regular expression to match [[double bracket]] links
 const DOUBLE_BRACKET_REGEX = /\[\[([^\]]+)\]\]/g;
