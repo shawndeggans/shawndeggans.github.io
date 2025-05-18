@@ -1,15 +1,21 @@
 :root {
-  /* Color palette - blues and slate grays as requested */
-  --color-background: #F0F8FF; /* Alice Blue background */
-  --color-text: #4A4A4A;       /* Dark gray for text */
-  --color-primary: #2C5282;    /* Primary blue */
-  --color-secondary: #718096;  /* Slate gray */
-  --color-accent: #4299E1;     /* Accent blue */
-  --color-surface: #FFFFFF;    /* Surface color */
+  /* Colors */
+  --color-background: #f0f8ff; /* Alice Blue */
+  --color-surface: #ffffff;
+  --color-primary: #2c3e50; /* Dark slate */
+  --color-secondary: #34495e;
+  --color-accent: #3498db; /* Blue */
+  --color-accent-light: #e3f2fd;
+  --color-text: #4a5568; /* Dark gray */
+  --color-text-secondary: #718096; /* Medium gray */
+  --color-border: #e2e8f0;
+  --color-code-bg: #f7fafc;
   
   /* Typography */
-  --font-body: 'Source Serif Pro', Georgia, serif;
-  --font-heading: 'Open Sans', Arial, sans-serif;
+  --font-family-body: 'Source Serif Pro', serif;
+  --font-family-heading: 'Open Sans', sans-serif;
+  --font-size-base: 16px;
+  --line-height-base: 1.6;
   
   /* Spacing */
   --spacing-xs: 0.25rem;
@@ -17,5 +23,16 @@
   --spacing-md: 1rem;
   --spacing-lg: 1.5rem;
   --spacing-xl: 2rem;
-  --spacing-xxl: 3rem;
+  --spacing-2xl: 3rem;
+  
+  /* Layout */
+  --max-width-content: 800px;
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
