@@ -5,11 +5,19 @@ export function transformContentToGraphData(
   contentMap: Map<string, ParsedContent>,
   links: Array<{ from: string; to: string }>
 ): GraphData {
+  // Exclude standalone pages like 'about' from the graph
+  const excludeFromGraph = ['about'];
+  
   const nodes: GraphNode[] = [];
   const processedLinks: GraphLink[] = [];
   
   // Create nodes from content
   contentMap.forEach((content, slug) => {
+    // Skip pages that shouldn't be in the graph
+    if (excludeFromGraph.includes(slug)) {
+      return;
+    }
+    
     nodes.push({
       id: slug,
       title: content.metadata.title,
@@ -22,8 +30,11 @@ export function transformContentToGraphData(
   
   // Create links from connections
   links.forEach(link => {
-    // Only include links where both nodes exist
-    if (contentMap.has(link.from) && contentMap.has(link.to)) {
+    // Only include links where both nodes exist AND neither is excluded
+    if (contentMap.has(link.from) && 
+        contentMap.has(link.to) && 
+        !excludeFromGraph.includes(link.from) && 
+        !excludeFromGraph.includes(link.to)) {
       processedLinks.push({
         source: link.from,
         target: link.to,

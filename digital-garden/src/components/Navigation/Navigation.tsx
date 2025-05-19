@@ -21,6 +21,16 @@ export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
       label: 'Timeline',
       path: '/timeline',
     },
+    {
+      id: 'tag-graph',
+      label: 'Tag Network',
+      path: '/tag-graph',
+    },
+    {
+      id: 'about',           // ADD THIS
+      label: 'About',        // ADD THIS
+      path: '/about',        // ADD THIS
+    },                       // ADD THIS
   ];
 
   const isActive = (path: string): boolean => {

@@ -1,0 +1,337 @@
+.tag-graph-view {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-background);
+  overflow: hidden;
+}
+
+.tag-graph-header {
+  padding: var(--spacing-lg);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.tag-graph-title h1 {
+  margin: 0 0 var(--spacing-xs) 0;
+  color: var(--color-text-primary);
+  font-family: var(--font-family-heading);
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.tag-graph-title p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+}
+
+/* Controls */
+.tag-graph-controls {
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-lg);
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  min-width: 150px;
+}
+
+.control-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.control-value {
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.control-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-border);
+  outline: none;
+  cursor: pointer;
+}
+
+.control-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.control-slider::-webkit-slider-thumb:hover {
+  background: var(--color-primary-hover);
+}
+
+.control-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s ease;
+}
+
+.control-slider::-moz-range-thumb:hover {
+  background: var(--color-primary-hover);
+}
+
+.control-checkbox {
+  transform: scale(1.2);
+  margin-right: var(--spacing-xs);
+}
+
+/* Tag Stats */
+.tag-stats {
+  margin-left: auto;
+  display: flex;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-background);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* Graph Container */
+.tag-graph-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Loading, Error, Empty States */
+.tag-graph-loading,
+.tag-graph-error,
+.tag-graph-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top: 3px solid var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: var(--spacing-md);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Tooltip */
+.tag-graph-tooltip {
+  position: absolute;
+  top: var(--spacing-lg);
+  right: var(--spacing-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-lg);
+  max-width: 300px;
+  z-index: 10;
+}
+
+.tag-graph-tooltip h3 {
+  margin: 0 0 var(--spacing-sm) 0;
+  color: var(--color-primary);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.tooltip-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.tooltip-content-count {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.tooltip-content-list strong {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.tooltip-content-list ul {
+  margin: 0;
+  padding-left: var(--spacing-md);
+  list-style-type: disc;
+}
+
+.tooltip-content-list li {
+  font-size: 0.8125rem;
+  color: var(--color-text-primary);
+  margin-bottom: 2px;
+}
+
+/* Instructions */
+.tag-graph-instructions {
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.tag-graph-instructions p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.tag-graph-instructions strong {
+  color: var(--color-text-primary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .tag-graph-header {
+    padding: var(--spacing-md);
+    text-align: center;
+  }
+
+  .tag-graph-controls {
+    padding: var(--spacing-sm) var(--spacing-md);
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .control-group {
+    min-width: auto;
+  }
+
+  .tag-stats {
+    margin-left: 0;
+    justify-content: center;
+  }
+
+  .tag-graph-tooltip {
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    left: var(--spacing-md);
+    max-width: none;
+  }
+
+  .tag-graph-instructions {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .tag-graph-controls {
+    gap: var(--spacing-md);
+  }
+
+  .tag-stats {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
+  .stat-item {
+    flex-direction: row;
+    gap: var(--spacing-xs);
+  }
+
+  .tag-graph-title h1 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Animation for tag nodes */
+.tag-graph-container svg {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Custom scrollbar for tooltip content lists */
+.tooltip-content-list {
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.tooltip-content-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.tooltip-content-list::-webkit-scrollbar-track {
+  background: var(--color-background);
+  border-radius: 2px;
+}
+
+.tooltip-content-list::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 2px;
+}
+
+.tooltip-content-list::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
