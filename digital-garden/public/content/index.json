@@ -2,7 +2,10 @@
   "files": [
     "index.md",
     "sample-connected.md",
-    "about.md"
+    "about.md",
+    "Building a Semantic Layer.md",
+    "My Core Values.md",
+    "volatility-based decomposition.md"
   ],
   "lastUpdated": "2023-09-15T10:00:00Z"
 }
