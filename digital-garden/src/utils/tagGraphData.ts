@@ -20,7 +20,7 @@ export function transformContentToTagGraph(
     });
   });
   
-  // Create tag nodes
+  // Create initial tag nodes
   const nodes: TagNode[] = [];
   tagContentMap.forEach((contentSlugs, tag) => {
     const contentCount = contentSlugs.length;
@@ -32,10 +32,12 @@ export function transformContentToTagGraph(
       size: calculateTagNodeSize(contentCount),
       contentCount,
       connectedContent: contentSlugs,
+      neighbors: [], // Will be populated below
+      links: [], // Will be populated below
     });
   });
   
-  // Create tag links based on co-occurrence
+  // Create tag links based on co-occurrence and generate IDs
   const links: TagLink[] = [];
   const tagList = Array.from(tagContentMap.keys());
   
@@ -57,7 +59,9 @@ export function transformContentToTagGraph(
           content2.length
         );
         
+        const linkId = `${tag1}-${tag2}`;
         links.push({
+          id: linkId,
           source: tag1,
           target: tag2,
           value: strength,
@@ -66,6 +70,32 @@ export function transformContentToTagGraph(
       }
     }
   }
+  
+  // Pre-compute neighbors and link associations (Obsidian-style)
+  const nodeMap = new Map<string, TagNode>();
+  nodes.forEach(node => nodeMap.set(node.id, node));
+  
+  links.forEach(link => {
+    const sourceId = typeof link.source === 'string' ? link.source : link.source.id;
+    const targetId = typeof link.target === 'string' ? link.target : link.target.id;
+    
+    const sourceNode = nodeMap.get(sourceId);
+    const targetNode = nodeMap.get(targetId);
+    
+    if (sourceNode && targetNode) {
+      // Add bidirectional neighbor relationships
+      if (!sourceNode.neighbors.includes(targetId)) {
+        sourceNode.neighbors.push(targetId);
+      }
+      if (!targetNode.neighbors.includes(sourceId)) {
+        targetNode.neighbors.push(sourceId);
+      }
+      
+      // Associate link with both nodes
+      sourceNode.links.push(link.id);
+      targetNode.links.push(link.id);
+    }
+  });
   
   return { nodes, links };
 }

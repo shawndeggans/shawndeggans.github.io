@@ -19,6 +19,106 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const simulationRef = useRef<d3.Simulation<GraphNode, GraphLink> | null>(null);
+  
+  // Obsidian-style state management
+  const highlightedNodesRef = useRef<Set<string>>(new Set());
+  const highlightedLinksRef = useRef<Set<string>>(new Set());
+  const hoveredNodeRef = useRef<GraphNode | null>(null);
+  
+  // D3 element references for efficient updates
+  const nodeElementsRef = useRef<d3.Selection<SVGCircleElement, GraphNode, SVGGElement, unknown> | null>(null);
+  const linkElementsRef = useRef<d3.Selection<SVGLineElement, GraphLink, SVGGElement, unknown> | null>(null);
+  const labelElementsRef = useRef<d3.Selection<SVGTextElement, GraphNode, SVGGElement, unknown> | null>(null);
+
+  // Obsidian-style helper methods
+  const clearHighlights = useCallback(() => {
+    highlightedNodesRef.current.clear();
+    highlightedLinksRef.current.clear();
+  }, []);
+
+  const isHighlightedNode = useCallback((node: GraphNode): boolean => {
+    return highlightedNodesRef.current.has(node.id);
+  }, []);
+
+  const isHighlightedLink = useCallback((link: GraphLink): boolean => {
+    return highlightedLinksRef.current.has(link.id);
+  }, []);
+
+  const getNodeColor = useCallback((node: GraphNode): string => {
+    if (isHighlightedNode(node)) {
+      // Node is highlighted
+      return node === hoveredNodeRef.current
+        ? config.colors.nodes.hover
+        : config.colors.nodes.selected;
+    } else {
+      return node.id === selectedNodeId 
+        ? config.colors.nodes.selected 
+        : config.colors.nodes.default;
+    }
+  }, [config.colors, selectedNodeId, isHighlightedNode]);
+
+  const getLinkColor = useCallback((link: GraphLink): string => {
+    return isHighlightedLink(link) 
+      ? config.colors.links.hover 
+      : config.colors.links.default;
+  }, [config.colors, isHighlightedLink]);
+
+  const updateHighlight = useCallback(() => {
+    // Trigger update of highlighted objects - Obsidian pattern
+    if (nodeElementsRef.current) {
+      nodeElementsRef.current
+        .style('fill', getNodeColor)
+        .style('opacity', d => {
+          if (hoveredNodeRef.current === null) return 1;
+          return isHighlightedNode(d) ? 1 : 0.3;
+        })
+        .style('stroke', d => d.fx !== undefined ? '#e74c3c' : '#fff')
+        .style('stroke-width', d => {
+          if (d === hoveredNodeRef.current) return 3;
+          return d.fx !== undefined ? 2.5 : 1.5;
+        });
+    }
+
+    if (linkElementsRef.current) {
+      linkElementsRef.current
+        .style('stroke', getLinkColor)
+        .style('opacity', d => isHighlightedLink(d) ? 0.8 : 0.3)
+        .style('stroke-width', d => isHighlightedLink(d) ? 2 : 1);
+    }
+
+    if (labelElementsRef.current) {
+      labelElementsRef.current
+        .style('opacity', d => d === hoveredNodeRef.current ? 1 : 0);
+    }
+  }, [getNodeColor, getLinkColor, isHighlightedNode, isHighlightedLink]);
+
+  const handleNodeHover = useCallback((node: GraphNode | null) => {
+    if ((!node && !highlightedNodesRef.current.size) || 
+        (node && hoveredNodeRef.current === node)) {
+      return;
+    }
+
+    clearHighlights();
+
+    if (node) {
+      // Add the hovered node itself
+      highlightedNodesRef.current.add(node.id);
+      
+      // Add all neighbors using pre-computed data
+      node.neighbors.forEach(neighborId => {
+        highlightedNodesRef.current.add(neighborId);
+      });
+      
+      // Add all links using pre-computed data
+      node.links.forEach(linkId => {
+        highlightedLinksRef.current.add(linkId);
+      });
+    }
+    
+    hoveredNodeRef.current = node;
+    updateHighlight();
+    onNodeHover(node);
+  }, [clearHighlights, updateHighlight, onNodeHover]);
 
   const createSimulation = useCallback(() => {
     if (!svgRef.current) return;
@@ -30,16 +130,23 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({
       simulationRef.current.stop();
     }
 
-    // Create new simulation
+    // Create new simulation with optimized forces
     const simulation = d3.forceSimulation<GraphNode, GraphLink>(data.nodes)
       .force('link', d3.forceLink<GraphNode, GraphLink>(data.links)
         .id(d => d.id)
         .strength(forces.link))
-      .force('charge', d3.forceManyBody().strength(forces.charge))
-      .force('center', d3.forceCenter(width / 2, height / 2).strength(forces.center))
+      .force('charge', d3.forceManyBody()
+        .strength(-200)) // Reduced from -300 for less repulsion
+      .force('center', d3.forceCenter(width / 2, height / 2)
+        .strength(forces.center))
       .force('collision', d3.forceCollide()
-        .radius((d: d3.SimulationNodeDatum) => config.nodeRadius.min * (d as GraphNode).size)
-        .strength(forces.collision));
+        .radius((d: d3.SimulationNodeDatum) => {
+          const node = d as GraphNode;
+          return config.nodeRadius.min + (node.size * 2) + 5; // Added padding
+        })
+        .strength(forces.collision))
+      .alphaDecay(0.02) // Slower cooling for smoother animation
+      .velocityDecay(0.4); // Higher damping to reduce drift
 
     simulationRef.current = simulation;
     return simulation;
@@ -59,29 +166,33 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({
     const linksGroup = container.append('g').attr('class', 'links');
     const nodesGroup = container.append('g').attr('class', 'nodes');
 
-    // Create links
+    // Create links with Obsidian-style setup
     const linkElements = linksGroup
       .selectAll('line')
       .data(data.links)
       .enter()
       .append('line')
-      .style('stroke', colors.links.default)
+      .style('stroke', getLinkColor)
       .style('stroke-width', 1)
       .style('stroke-opacity', 0.6);
 
-    // Create nodes
+    linkElementsRef.current = linkElements;
+
+    // Create nodes with Obsidian-style setup
     const nodeElements = nodesGroup
       .selectAll('circle')
       .data(data.nodes)
       .enter()
       .append('circle')
       .attr('r', d => nodeRadius.min + (d.size * 2))
-      .style('fill', colors.nodes.default)
+      .style('fill', getNodeColor)
       .style('stroke', '#fff')
       .style('stroke-width', 1.5)
       .style('cursor', 'pointer');
 
-    // Create labels
+    nodeElementsRef.current = nodeElements;
+
+    // Create labels with Obsidian-style setup
     const labelElements = nodesGroup
       .selectAll('text')
       .data(data.nodes)
@@ -96,69 +207,38 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({
       .style('pointer-events', 'none')
       .style('opacity', 0); // Hide labels initially
 
-    // Add interactions
+    labelElementsRef.current = labelElements;
+
+    // Simplified Obsidian-style interactions
     nodeElements
+      .on('mouseover', (event, d) => handleNodeHover(d))
+      .on('mouseout', () => handleNodeHover(null))
       .on('click', (event, d) => {
+        // Simple click handler - no drag conflicts
         onNodeClick(d);
       })
-      .on('mouseenter', (event, d) => {
-        // Highlight connected nodes and links
-        const connectedNodes = new Set([d.id]);
-        const connectedLinks = data.links.filter(link => {
-          const sourceId = typeof link.source === 'string' ? link.source : link.source.id;
-          const targetId = typeof link.target === 'string' ? link.target : link.target.id;
-          if (sourceId === d.id) {
-            connectedNodes.add(targetId);
-            return true;
-          }
-          if (targetId === d.id) {
-            connectedNodes.add(sourceId);
-            return true;
-          }
-          return false;
-        });
-
-        // Update node styles
-        nodeElements
-          .style('opacity', node => connectedNodes.has(node.id) ? 1 : 0.3)
-          .style('fill', node => {
-            if (node.id === d.id) return colors.nodes.hover;
-            return connectedNodes.has(node.id) ? colors.nodes.default : colors.nodes.default;
-          });
-
-        // Update link styles
-        linkElements
-          .style('opacity', link => {
-            const sourceId = typeof link.source === 'string' ? link.source : link.source.id;
-            const targetId = typeof link.target === 'string' ? link.target : link.target.id;
-            return (sourceId === d.id || targetId === d.id) ? 1 : 0.1;
-          })
-          .style('stroke', link => {
-            const sourceId = typeof link.source === 'string' ? link.source : link.source.id;
-            const targetId = typeof link.target === 'string' ? link.target : link.target.id;
-            return (sourceId === d.id || targetId === d.id) ? colors.links.hover : colors.links.default;
-          });
-
-        // Show label for hovered node
-        labelElements
-          .style('opacity', node => node.id === d.id ? 1 : 0);
-
-        onNodeHover(d);
+      .on('dblclick', (event, d) => {
+        // Double-click to release fixed position
+        event.stopPropagation();
+        d.fx = undefined;
+        d.fy = undefined;
+        if (simulation) simulation.alpha(0.3).restart();
       })
-      .on('mouseleave', () => {
-        // Reset all styles
-        nodeElements
-          .style('opacity', 1)
-          .style('fill', d => d.id === selectedNodeId ? colors.nodes.selected : colors.nodes.default);
-
-        linkElements
-          .style('opacity', 0.6)
-          .style('stroke', colors.links.default);
-
-        labelElements.style('opacity', 0);
-
-        onNodeHover(null);
-      });
+      .call(d3.drag<SVGCircleElement, GraphNode>()
+        .on('start', (event, d) => {
+          if (!event.active && simulation) simulation.alphaTarget(0.3).restart();
+          d.fx = d.x;
+          d.fy = d.y;
+        })
+        .on('drag', (event, d) => {
+          d.fx = event.x;
+          d.fy = event.y;
+        })
+        .on('end', (event, d) => {
+          if (!event.active && simulation) simulation.alphaTarget(0);
+          // Keep node fixed after dragging (sticky behavior)
+        })
+      );
 
     // Update selected node appearance
     nodeElements
@@ -168,8 +248,18 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({
     const simulation = createSimulation();
     if (!simulation) return;
 
+    // Auto-stop simulation after initial layout
+    let tickCount = 0;
+    const maxTicks = 300; // Stop after 300 ticks for performance
+
     // Update positions on simulation tick
     simulation.on('tick', () => {
+      tickCount++;
+      
+      // Stop simulation after stabilization
+      if (tickCount > maxTicks || simulation.alpha() < 0.01) {
+        simulation.stop();
+      }
       linkElements
         .attr('x1', d => (d.source as GraphNode).x || 0)
         .attr('y1', d => (d.source as GraphNode).y || 0)
@@ -200,7 +290,7 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({
         simulationRef.current.stop();
       }
     };
-  }, [data, config, createSimulation, onNodeClick, onNodeHover, selectedNodeId]);
+  }, [data, config, createSimulation, onNodeClick, handleNodeHover, selectedNodeId, getNodeColor, getLinkColor]);
 
   return (
     <svg
