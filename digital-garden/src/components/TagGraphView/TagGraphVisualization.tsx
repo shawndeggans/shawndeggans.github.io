@@ -32,19 +32,23 @@ export const TagGraphVisualization: React.FC<TagGraphVisualizationProps> = ({
       simulationRef.current.stop();
     }
 
-    // Create new simulation with adjusted forces for tags
+    // Create new simulation with optimized forces for tags
     const simulation = d3.forceSimulation<TagNode, TagLink>(data.nodes)
       .force('link', d3.forceLink<TagNode, TagLink>(data.links)
         .id(d => d.id)
         .strength(link => forces.link * link.value)) // Scale by connection strength
-      .force('charge', d3.forceManyBody().strength(forces.charge))
-      .force('center', d3.forceCenter(width / 2, height / 2).strength(forces.center))
+      .force('charge', d3.forceManyBody()
+        .strength(-250)) // Reduced from -400 for less repulsion
+      .force('center', d3.forceCenter(width / 2, height / 2)
+        .strength(forces.center))
       .force('collision', d3.forceCollide()
         .radius((d: d3.SimulationNodeDatum) => {
           const node = d as TagNode;
-          return config.nodeRadius.min * (1 + node.size);
+          return config.nodeRadius.min * (1 + node.size) + 5; // Added padding
         })
-        .strength(forces.collision));
+        .strength(forces.collision))
+      .alphaDecay(0.02) // Slower cooling for smoother animation
+      .velocityDecay(0.4); // Higher damping to reduce drift
 
     simulationRef.current = simulation;
     return simulation;
@@ -144,34 +148,105 @@ export const TagGraphVisualization: React.FC<TagGraphVisualizationProps> = ({
       .style('dominant-baseline', 'central')
       .style('pointer-events', 'none');
 
+    // Track drag state
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let isDragging = false;
+    const dragThreshold = 5; // pixels
+
+    // Add drag behavior with proper click handling
+    const drag = d3.drag<SVGCircleElement, TagNode>()
+      .on('start', (event, d) => {
+        // Store initial position
+        dragStartX = event.x;
+        dragStartY = event.y;
+        isDragging = false;
+        
+        if (!event.active && simulation) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+      })
+      .on('drag', (event, d) => {
+        // Check if we've moved enough to consider it a drag
+        const dx = Math.abs(event.x - dragStartX);
+        const dy = Math.abs(event.y - dragStartY);
+        if (dx > dragThreshold || dy > dragThreshold) {
+          isDragging = true;
+        }
+        
+        d.fx = event.x;
+        d.fy = event.y;
+      })
+      .on('end', (event, d) => {
+        if (!event.active && simulation) simulation.alphaTarget(0);
+        
+        // If we didn't drag far enough, treat it as a click
+        const dx = Math.abs(event.x - dragStartX);
+        const dy = Math.abs(event.y - dragStartY);
+        if (dx < dragThreshold && dy < dragThreshold && !isDragging) {
+          // Navigate on click
+          onNodeClick(d);
+          // Optionally release the fixed position on navigation
+          d.fx = undefined;
+          d.fy = undefined;
+        }
+        // Otherwise keep node fixed after dragging (sticky behavior)
+      });
+
     // Add interactions
     nodeElements
-      .on('click', (event, d) => {
-        onNodeClick(d);
+      .call(drag)
+      .on('dblclick', (event, d) => {
+        // Double-click to release fixed position
+        event.stopPropagation(); // Prevent any bubbling
+        d.fx = undefined;
+        d.fy = undefined;
+        if (simulation) simulation.alpha(0.3).restart();
       })
       .on('mouseenter', (event, d) => {
-        // Highlight connected tags and links
+        // Always include the hovered node itself
         const connectedTags = new Set([d.id]);
-        const connectedLinks = data.links.filter(link => {
+        
+        // Find connected tags through links
+        data.links.forEach(link => {
           const sourceId = typeof link.source === 'string' ? link.source : link.source.id;
           const targetId = typeof link.target === 'string' ? link.target : link.target.id;
           if (sourceId === d.id) {
             connectedTags.add(targetId);
-            return true;
-          }
-          if (targetId === d.id) {
+          } else if (targetId === d.id) {
             connectedTags.add(sourceId);
-            return true;
           }
-          return false;
         });
 
-        // Update node styles
+        // Update node styles - ensure hovered node stays visible
         nodeElements
-          .style('opacity', node => connectedTags.has(node.id) ? 1 : 0.3)
+          .style('opacity', node => {
+            // Hovered node always full opacity
+            if (node.id === d.id) return 1;
+            // Connected nodes full opacity, others dimmed
+            return connectedTags.has(node.id) ? 1 : 0.3;
+          })
           .style('fill', node => {
             if (node.id === d.id) return colors.nodes.hover;
             return getNodeColor(node);
+          })
+          .style('stroke', node => {
+            // Show different stroke for fixed nodes
+            return node.fx !== undefined ? '#e74c3c' : '#fff';
+          })
+          .style('stroke-width', node => {
+            // Slightly thicker stroke for hovered node
+            if (node.id === d.id) return 4;
+            return node.fx !== undefined ? 3 : 2;
+          })
+          .style('transform', node => {
+            // Scale up hovered node slightly
+            if (node.id === d.id) {
+              const x = node.x || 0;
+              const y = node.y || 0;
+              return `translate(${x}px, ${y}px) scale(1.2) translate(${-x}px, ${-y}px)`;
+            }
+            return null;
           });
 
         // Update link styles
@@ -197,7 +272,15 @@ export const TagGraphVisualization: React.FC<TagGraphVisualizationProps> = ({
         // Reset all styles
         nodeElements
           .style('opacity', 1)
-          .style('fill', getNodeColor);
+          .style('fill', getNodeColor)
+          .style('stroke', d => {
+            // Maintain stroke for fixed nodes
+            return d.fx !== undefined ? '#e74c3c' : '#fff';
+          })
+          .style('stroke-width', d => {
+            return d.fx !== undefined ? 3 : 2;
+          })
+          .style('transform', null); // Reset scale
 
         linkElements
           .style('opacity', link => 0.4 + (link.value * 0.4))
@@ -214,8 +297,18 @@ export const TagGraphVisualization: React.FC<TagGraphVisualizationProps> = ({
     const simulation = createSimulation();
     if (!simulation) return;
 
+    // Auto-stop simulation after initial layout
+    let tickCount = 0;
+    const maxTicks = 300; // Stop after 300 ticks for performance
+
     // Update positions on simulation tick
     simulation.on('tick', () => {
+      tickCount++;
+      
+      // Stop simulation after stabilization
+      if (tickCount > maxTicks || simulation.alpha() < 0.01) {
+        simulation.stop();
+      }
       linkElements
         .attr('x1', d => (d.source as TagNode).x || 0)
         .attr('y1', d => (d.source as TagNode).y || 0)

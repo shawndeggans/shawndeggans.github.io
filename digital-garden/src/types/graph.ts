@@ -5,6 +5,9 @@ export interface GraphNode {
   size: number; // Node size based on connections
   tags: string[];
   date: string;
+  // Obsidian-style neighbor tracking
+  neighbors: string[]; // Pre-computed neighbor node IDs
+  links: string[]; // Pre-computed link IDs involving this node
   x?: number; // D3 will set these
   y?: number;
   fx?: number; // Fixed positions
@@ -13,6 +16,7 @@ export interface GraphNode {
 }
 
 export interface GraphLink {
+  id: string; // Unique identifier for the link
   source: string | GraphNode;
   target: string | GraphNode;
   value: number; // Link strength

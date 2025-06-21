@@ -5,6 +5,9 @@ export interface TagNode {
   size: number; // based on content count
   contentCount: number; // number of posts with this tag
   connectedContent: string[]; // slugs of content with this tag
+  // Obsidian-style neighbor tracking
+  neighbors: string[]; // Pre-computed neighbor tag IDs
+  links: string[]; // Pre-computed link IDs involving this tag
   x?: number; // D3 will set these
   y?: number;
   fx?: number; // Fixed positions
@@ -13,6 +16,7 @@ export interface TagNode {
 }
 
 export interface TagLink {
+  id: string; // Unique identifier for the link
   source: string | TagNode;
   target: string | TagNode;
   value: number; // co-occurrence strength (0-1)

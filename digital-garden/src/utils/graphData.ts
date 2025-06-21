@@ -11,7 +11,7 @@ export function transformContentToGraphData(
   const nodes: GraphNode[] = [];
   const processedLinks: GraphLink[] = [];
   
-  // Create nodes from content
+  // Create initial nodes from content
   contentMap.forEach((content, slug) => {
     // Skip pages that shouldn't be in the graph
     if (excludeFromGraph.includes(slug)) {
@@ -25,21 +25,52 @@ export function transformContentToGraphData(
       size: calculateNodeSize(slug, links),
       tags: content.metadata.tags || [],
       date: content.metadata.date || '',
+      neighbors: [], // Will be populated below
+      links: [], // Will be populated below
     });
   });
   
-  // Create links from connections
-  links.forEach(link => {
+  // Create links from connections and generate IDs
+  links.forEach((link, index) => {
     // Only include links where both nodes exist AND neither is excluded
     if (contentMap.has(link.from) && 
         contentMap.has(link.to) && 
         !excludeFromGraph.includes(link.from) && 
         !excludeFromGraph.includes(link.to)) {
+      
+      const linkId = `${link.from}-${link.to}`;
       processedLinks.push({
+        id: linkId,
         source: link.from,
         target: link.to,
         value: 1, // All links have equal weight for now
       });
+    }
+  });
+  
+  // Pre-compute neighbors and link associations (Obsidian-style)
+  const nodeMap = new Map<string, GraphNode>();
+  nodes.forEach(node => nodeMap.set(node.id, node));
+  
+  processedLinks.forEach(link => {
+    const sourceId = typeof link.source === 'string' ? link.source : link.source.id;
+    const targetId = typeof link.target === 'string' ? link.target : link.target.id;
+    
+    const sourceNode = nodeMap.get(sourceId);
+    const targetNode = nodeMap.get(targetId);
+    
+    if (sourceNode && targetNode) {
+      // Add bidirectional neighbor relationships
+      if (!sourceNode.neighbors.includes(targetId)) {
+        sourceNode.neighbors.push(targetId);
+      }
+      if (!targetNode.neighbors.includes(sourceId)) {
+        targetNode.neighbors.push(sourceId);
+      }
+      
+      // Associate link with both nodes
+      sourceNode.links.push(link.id);
+      targetNode.links.push(link.id);
     }
   });
   
