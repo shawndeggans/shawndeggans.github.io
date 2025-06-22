@@ -53,10 +53,9 @@ export function useContent(): UseContentReturn {
       // Transform the content index format to ParsedContent format
       contentIndex.files.forEach((file: any) => {
         // Convert internal link titles to IDs
-        const outboundLinks = (file.internalLinks || []).map((linkTitle: string) => {
-          const linkedId = titleToIdMap.get(linkTitle);
-          return linkedId || linkTitle; // fallback to original if no match
-        }).filter((link: string) => titleToIdMap.has(link) || contentIndex.files.some((f: any) => f.id === link));
+        const outboundLinks = (file.internalLinks || [])
+          .map((linkTitle: string) => titleToIdMap.get(linkTitle))
+          .filter((linkedId: string | undefined): linkedId is string => linkedId !== undefined);
         
         const parsedContent: ParsedContent = {
           slug: file.id,
