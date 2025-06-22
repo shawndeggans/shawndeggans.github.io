@@ -1,0 +1,114 @@
+{
+  "lastGenerated": "2025-06-22T15:42:56.564Z",
+  "totalFiles": 6,
+  "files": [
+    {
+      "id": "building-a-semantic-layer",
+      "filename": "Building a Semantic Layer.md",
+      "title": "Building a Semantic Layer",
+      "date": "2024-03-15",
+      "tags": [
+        "data-architecture",
+        "semantic-layer",
+        "data-modeling",
+        "business-intelligence"
+      ],
+      "description": "Understanding and building semantic layers that transform raw data into meaningful business concepts",
+      "internalLinks": [],
+      "body": "# Building a Semantic Layer: From Theory to Practice\n\n## What is a Semantic Layer?\n\nA semantic layer serves as more than just a filter for your data—it's an active translation layer that transforms raw data into meaningful business concepts. While it sits between your data sources and business users, its role is far more dynamic than simple filtering. It's actively interpreting and restructuring how data is understood and accessed.\n\nIn practice, this means the semantic layer is doing several key transformations:\n- Converting raw database fields into business-friendly terms\n- Transforming technical relationships into intuitive connections\n- Standardizing complex calculations into consistent business metrics\n\nFor example, instead of seeing a raw field like \"trans_dt,\" users see \"Transaction Date.\" Beyond simple field renaming, the semantic layer might automatically handle time-zone conversions or fiscal year calculations based on that date.\n\n## Methodological Approach\n\nWhen designing a semantic layer, several methodologies can work together effectively. Let's explore how these methodologies complement each other through a real-world example of an Internet Service Provider (ISP) providing rural internet access.\n\n### Domain-Driven Design (DDD) as the Foundation\n\nDDD provides the conceptual framework for organizing business concepts. In our ISP example, we identified several key bounded contexts:\n\n- Sales/Prospecting: Handling potential customers, coverage areas, and quotes\n- Service Management: Managing installations, service calls, and equipment\n- Customer Support: Tracking tickets, call history, and service issues\n- Billing/Finance: Processing invoices, payments, and service plans\n\nEach context has its own understanding of key concepts. For instance, a \"Customer\" in the Sales context might include prospects, while in Billing it only includes active accounts.\n\n### Data Vault for Historical Tracking\n\nData Vault modeling helps manage the historical aspects of our data. For the ISP, this includes:\n\nHub Tables:\n- Customer information\n- Service locations\n- Equipment inventory\n\nThese are linked together through relationship tables that track how customers connect to locations and what equipment they use. Satellite tables then store the changing attributes over time, such as service plan changes or equipment upgrades.\n\n### OLAP: Understanding Facts vs. Dimensions\n\nOne of the key insights from our discussion was clarifying the distinction between facts and dimensions. In OLAP:\n\nFacts are measurable events or metrics that can be aggregated:\n- Monthly bill amounts\n- Call durations\n- Service outage lengths\n- Data usage quantities\n\nDimensions are the descriptive attributes that provide context:\n- Customer details (name, type, segment)\n- Service location characteristics (address, terrain type)\n- Time periods\n- Service plan details\n\nA helpful rule of thumb emerged from our discussion: if you're asking \"how many\" or \"how much,\" you're dealing with a fact. If you're asking \"what type\" or \"which one,\" you're working with a dimension.\n\n### Business Capability Model Integration\n\nThe Business Capability Model helps align our semantic layer with organizational functions. For our ISP, this includes capabilities like:\n- Customer Acquisition\n- Service Delivery\n- Customer Support\n- Billing & Revenue\n- Network Management\n- Field Service Operations\n\n## Putting It All Together\n\nThe power of combining these methodologies becomes clear when we look at how they interact. For example, when modeling a customer service interaction:\n\n1. DDD helps us understand the bounded context (Customer Support) and the relevant business concepts (Customer, Ticket, Resolution)\n\n2. Data Vault modeling shows us how to track the history of customer interactions and service changes over time\n\n3. OLAP principles help us organize our metrics (call duration, resolution time) and dimensions (customer type, issue category)\n\n4. Business Capability Modeling ensures our semantic layer aligns with the organization's operational needs\n\n## Practical Implementation\n\nWhen implementing this model for our ISP, the semantic layer would need to:\n\n1. Unite data from disparate systems (CRM, billing, network monitoring) under a consistent business model\n\n2. Define standard metrics that work across contexts:\n   - \"Customer Lifetime Value\"\n   - \"Service Reliability\"\n   - \"Support Resolution Time\"\n\n3. Handle complex relationships, such as customers with multiple service locations or varying service levels\n\n4. Maintain historical views while presenting current operational data\n\nThe key to success is remembering that the semantic layer isn't just translating data—it's creating a coherent business view that makes sense to users across different parts of the organization.",
+      "readingTime": "4 min read",
+      "lastModified": "2025-06-21T15:42:23.738Z",
+      "wordCount": 691
+    },
+    {
+      "id": "my-core-values",
+      "filename": "My Core Values.md",
+      "title": "My Core Values",
+      "date": "2024-01-10",
+      "tags": [
+        "values",
+        "leadership",
+        "principles",
+        "architecture"
+      ],
+      "description": "Personal core values that guide my approach as a solution architect",
+      "internalLinks": [],
+      "body": "# My Core Values as a Solution Architect\n\n## Locality and Simplicity\n\nStriving to keep solutions as close to their point of use as possible while maintaining elegant simplicity in design and implementation.\n\nI design systems that are easy to understand and maintain, keeping solutions close to where the problem exists. I avoid unnecessary complexity and over-engineering, choosing straightforward approaches over clever ones.\n\n## Focus, Flow, and Joy\n\nCreating and maintaining an environment that promotes deep work, continuous progress, and enjoyment in problem-solving.\n\nI structure work to allow for deep focus periods and create systems that enable smooth, uninterrupted workflows. Finding and sharing the joy in technical challenges while maintaining work-life harmony sustains energy and creativity.\n\n## Improvement of Daily Work\n\nContinuously seeking ways to enhance processes, tools, and methods used in daily architectural work.\n\nI regularly reflect on and refine working methods, automating repetitive tasks when beneficial. Sharing improvements with team members and learning from both successes and failures drives constant evolution.\n\n## Psychological Safety\n\nFostering an environment where team members feel secure in taking risks, asking questions, and admitting mistakes.\n\nI create spaces where open dialogue is welcomed, responding to mistakes with curiosity rather than judgment. I encourage diverse perspectives and ideas while modeling vulnerability and openness to feedback.\n\n## Customer Focus\n\nMaintaining unwavering attention to customer needs, challenges, and success while ensuring solutions truly serve their purpose.\n\nEvery solution starts with deep understanding of customer context. I regularly validate solutions against customer needs, make decisions based on customer value, and build lasting relationships through trust and delivery.\n\nThese values guide my approach to solution architecture, decision-making, and interactions with teams and customers. They serve as personal principles for professional growth and service delivery.",
+      "readingTime": "2 min read",
+      "lastModified": "2025-06-21T15:42:23.738Z",
+      "wordCount": 286
+    },
+    {
+      "id": "about",
+      "filename": "about.md",
+      "title": "about",
+      "date": null,
+      "tags": [],
+      "description": "",
+      "internalLinks": [],
+      "body": "# About\n\nI'm Shawn Deggans, a curiosity-driven explorer who has spent 25+ years navigating the intersection of technology and human problems. By day, I serve as Principal Solutions Architect at Applied Curiosity, where I help organizations transform complex technical challenges into practical, measurable business solutions.\n\n## What Drives Me\n\nCuriosity sits at the foundation of everything I do. After two and a half decades in technology, I've learned that the most interesting problems live in the spaces between disciplines—where business strategy meets technical implementation, where data becomes insight, where complexity transforms into elegant simplicity.\n\nI operate by five core principles:\n\n**Locality and Simplicity** — I design solutions that stay close to their problems and maintain elegant simplicity. Clean architecture matters more than clever tricks.\n\n**Focus, Flow, and Joy** — Deep work produces the best solutions. I create environments where concentration thrives and problem-solving becomes genuinely enjoyable.\n\n**Continuous Improvement** — Every process, every method, every day offers opportunities for refinement. I regularly examine how I work and share what I learn.\n\n**Psychological Safety** — Innovation requires environments where people feel secure asking questions, admitting mistakes, and proposing bold ideas.\n\n**Customer Focus** — Every solution must serve real human needs. I start with deep understanding of customer context and validate solutions against actual value.\n\n## Professional Journey\n\nMy career has spanned IT operations, web development, system integration, DevOps, data management, and cloud solutions. I've built everything from electronics e-commerce platforms to IoT systems for steel processing plants. I hold certifications as an AWS Solution Architect Associate and Databricks Data Analyst and Data Engineer Associate.\n\nCurrently, I focus on data strategy development, enterprise architecture, and the careful art of translating business anxieties into technical solutions. I've guided non-profits through data system modernizations, helped manufacturers implement predictive maintenance through IoT, and designed edge computing systems for Fortune 500 companies.\n\n## This Digital Garden\n\nThis space represents my playground—a place for experiments, explorations, and occasional rabbit holes. Unlike traditional blogs that force chronological navigation, this garden embraces non-linear discovery. Ideas connect through relationships rather than publication dates.\n\nYou'll find documentation from my professional work alongside personal experiments. I might share insights from architecting data platforms one day and explore plant monitoring telemetry the next. The connections between these seemingly disparate interests often reveal the most interesting patterns.\n\n## Current Explorations\n\nMy active projects reflect my curiosity across domains:\n\n- **Documentation systems** that capture knowledge from Jupyter notebooks\n- **Momentary apps** and time-focused applications\n- **Plant monitoring studies** using IoT and simulation\n- **Cloud tools** for managing Databricks budgets and policies\n- **Machine learning** examples and explorations\n\n## Technical Palette\n\nOver the years, I've worked across:\n\n**Solution Architecture** • **Data Engineering & Analytics** • **Cloud Solutions (AWS, Azure)** • **IoT Implementation** • **Machine Learning** • **Distributed Systems** • **Web Development**\n\n## Connect With Me\n\nI welcome conversations about interesting problems, potential collaborations, or questions about anything you find here. You can reach me through:\n\n- **GitHub**: [github.com/shawndeggans](https://github.com/shawndeggans)\n- **LinkedIn**: [linkedin.com/in/shawn-deggans](https://www.linkedin.com/in/shawn-deggans/)\n- **YouTube**: [@shawndeggans](https://www.youtube.com/@shawndeggans)\n\n\"The important thing is not to stop questioning. Curiosity has its own reason for existing.\" — Albert Einstein\n\n---\n\n*This garden grows through exploration and connection. Every link creates new pathways for discovery.*",
+      "readingTime": "3 min read",
+      "lastModified": "2025-06-21T15:42:23.738Z",
+      "wordCount": 530
+    },
+    {
+      "id": "index",
+      "filename": "index.md",
+      "title": "Curiouser and Curiouser!",
+      "date": "2023-09-01",
+      "tags": [
+        "introduction",
+        "digital-garden",
+        "welcome"
+      ],
+      "description": "Welcome to my digital garden where ideas grow and connect",
+      "internalLinks": [
+        "My Core Values",
+        "Building a Semantic Layer",
+        "volatility-based decomposition"
+      ],
+      "body": "# Curiouser and Curiouser!\n\nWelcome to my digital garden—a space where ideas grow, branch, and intertwine.\n\nUnlike traditional blogs, this garden thrives on connections. Concepts link to other concepts. Thoughts build upon thoughts. You might enter through one idea and emerge somewhere completely unexpected.\n\nI've planted [[My Core Values]] here alongside practical explorations like [[Building a Semantic Layer]] and architectural musings about [[volatility-based decomposition]]. Each piece connects to others in ways that reveal themselves as you wander.\n\nFeel free to explore. Follow the connections. See where curiosity leads you.\n\nThat's what gardens are for.",
+      "readingTime": "1 min read",
+      "lastModified": "2025-06-21T15:42:23.739Z",
+      "wordCount": 94
+    },
+    {
+      "id": "sample-connected",
+      "filename": "sample-connected.md",
+      "title": "Sample Connected Content",
+      "date": "2023-09-15",
+      "tags": [
+        "example",
+        "connections",
+        "digital-garden"
+      ],
+      "description": "An example of content with bidirectional links",
+      "internalLinks": [
+        "index",
+        "another-example"
+      ],
+      "body": "# Sample Connected Content\n\nThis is an example of how content can be connected in a digital garden. \n\n## Connections to Other Ideas\n\nThis content references the [[index]] page and demonstrates how the bidirectional linking system works. When you view this page, you'll see that it links to other content, and those pages will show this page in their \"Referenced by\" section.\n\n## Double Bracket Syntax\n\nUse double brackets to create links: [[another-example]] or [[index]].\n\nThese links will automatically be converted to proper navigation links and will create bidirectional connections between content.\n\n## Tags and Metadata\n\nThis content has tags that help categorize and filter content. The frontmatter at the top of the markdown file defines:\n\n- Title\n- Date\n- Tags\n- Description (optional)\n\n## Reading Time\n\nThe system automatically calculates reading time based on the content length.",
+      "readingTime": "1 min read",
+      "lastModified": "2025-05-19T01:21:51.979Z",
+      "wordCount": 139
+    },
+    {
+      "id": "volatility-based-decomposition",
+      "filename": "volatility-based decomposition.md",
+      "title": "Volatility-Based Decomposition",
+      "date": "2024-02-20",
+      "tags": [
+        "software-architecture",
+        "design-principles",
+        "decomposition",
+        "system-design"
+      ],
+      "description": "A strategy for organizing software components based on their expected rate of change",
+      "internalLinks": [],
+      "body": "# Volatility-Based Decomposition\n\nVolatility-based decomposition is a strategy in software architecture where components or services are designed and organized based on their expected rate of change or volatility. This approach aims to isolate parts of the system that change frequently from those that are more stable. By doing so, it minimizes the impact of changes and improves maintainability and scalability.\n\n## Key Concepts\n\n### Identify Volatile Components\n\nDetermine which parts of the system are subject to frequent changes. This could be due to evolving business requirements, regulatory changes, technological updates, or other factors.\n\n### Stable vs. Volatile\n\n**Stable Components**: These are parts of the system that change infrequently and have well-defined, enduring functionality. They often include core business logic or foundational services.\n\n**Volatile Components**: These are parts of the system that are expected to change more frequently. They might include features related to user interfaces, business rules, or integrations with external systems.\n\n### Decoupling\n\nSeparate volatile components from stable components to ensure that changes in one do not adversely affect the other. This reduces the risk and complexity of making changes.\n\n### Interface Design\n\nUse well-defined interfaces and APIs to encapsulate volatile components. This allows changes to be made internally without affecting other parts of the system.\n\n### Layered Architecture\n\nOften, volatility-based decomposition leads to a layered architecture where higher layers (closer to the user) are more volatile and lower layers (closer to the infrastructure) are more stable.\n\n## Steps for Implementation\n\n### Analyze Change Patterns\n\nReview historical data on which parts of the system have changed frequently. Predict future changes based on business and technological trends.\n\n### Classify Components\n\nCategorize components based on their volatility. This might involve creating a volatility matrix or map.\n\n### Design for Change\n\nDesign volatile components to be easily replaceable or updatable. Use techniques like plugin architectures, feature toggles, and microservices.\n\n### Define Clear Contracts\n\nEnsure that the interaction between stable and volatile components is governed by clear contracts and interfaces to minimize the impact of changes.\n\n## Example: E-commerce Application\n\nConsider an e-commerce application:\n\n**Stable Components**:\n- Product Catalog Service: Manages product information which changes infrequently\n- Order Processing Service: Handles the core logic of order creation, payment, and fulfillment\n\n**Volatile Components**:\n- Pricing Service: Subject to frequent changes due to promotions, discounts, and dynamic pricing strategies\n- User Interface: Constantly evolving based on user feedback, A/B testing, and new features\n\nIn this example, separating the Pricing Service and User Interface from the more stable Product Catalog and Order Processing services helps isolate frequent changes. Interfaces between these services ensure that changes in pricing logic or UI do not disrupt the core order processing and product management functionalities.\n\n## Benefits\n\n**Improved Maintainability**: Isolates frequent changes, making the system easier to maintain and evolve.\n\n**Reduced Risk**: Limits the impact of changes to specific parts of the system.\n\n**Scalability**: Allows different components to be scaled independently based on their volatility and usage patterns.\n\n**Flexibility**: Enables faster adaptation to changing business requirements and technological advancements.\n\nBy focusing on the volatility of different parts of the system, this decomposition method aims to create a more robust, adaptable, and manageable architecture.",
+      "readingTime": "3 min read",
+      "lastModified": "2025-06-21T15:42:23.739Z",
+      "wordCount": 523
+    }
+  ]
+}

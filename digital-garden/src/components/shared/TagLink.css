@@ -1,0 +1,399 @@
+/**
+ * TagLink Component Styles
+ * 
+ * Universal tag styling with multiple variants and states
+ */
+
+/* Base TagLink Styles */
+.tag-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  outline: none;
+  position: relative;
+  font-family: inherit;
+  font-weight: 500;
+}
+
+.tag-link:focus {
+  outline: 2px solid var(--accent-color, #3b82f6);
+  outline-offset: 2px;
+}
+
+.tag-link--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Size Variants */
+.tag-link--small {
+  font-size: 0.75rem;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+}
+
+.tag-link--medium {
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+}
+
+.tag-link--large {
+  font-size: 1rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.5rem;
+}
+
+/* Default Variant - Button-like appearance */
+.tag-link--default {
+  background: var(--bg-secondary, #f8f9fa);
+  color: var(--text-secondary, #6b7280);
+  border: 1px solid var(--border-color, #e5e7eb);
+}
+
+.tag-link--default:hover {
+  background: var(--bg-accent, #f3f4f6);
+  color: var(--text-primary, #1a1a1a);
+  border-color: var(--accent-color, #3b82f6);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tag-link--default.tag-link--active {
+  background: var(--accent-color, #3b82f6);
+  color: white;
+  border-color: var(--accent-color, #3b82f6);
+}
+
+.tag-link--default.tag-link--active:hover {
+  background: var(--accent-color-hover, #2563eb);
+  transform: translateY(-1px);
+}
+
+/* Inline Variant - Text-like appearance */
+.tag-link--inline {
+  color: var(--accent-color, #3b82f6);
+  background: transparent;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
+.tag-link--inline:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--accent-color-hover, #2563eb);
+}
+
+.tag-link--inline.tag-link--active {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent-color-hover, #2563eb);
+  font-weight: 600;
+}
+
+.tag-link--inline::before {
+  content: '#';
+  opacity: 0.6;
+  margin-right: 0.125rem;
+}
+
+/* Badge Variant - Chip-like appearance */
+.tag-link--badge {
+  background: var(--accent-color, #3b82f6);
+  color: white;
+  border-radius: 9999px;
+  font-weight: 500;
+  border: none;
+}
+
+.tag-link--badge:hover {
+  background: var(--accent-color-hover, #2563eb);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.tag-link--badge.tag-link--active {
+  background: var(--success-color, #10b981);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.tag-link--badge.tag-link--active:hover {
+  background: var(--success-color-hover, #059669);
+}
+
+/* Minimal Variant - Subtle appearance */
+.tag-link--minimal {
+  color: var(--text-tertiary, #9ca3af);
+  background: transparent;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.tag-link--minimal:hover {
+  color: var(--text-secondary, #6b7280);
+  background: var(--bg-secondary, #f8f9fa);
+}
+
+.tag-link--minimal.tag-link--active {
+  color: var(--accent-color, #3b82f6);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+/* Tag Text */
+.tag-link__text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.tag-link--small .tag-link__text {
+  max-width: 80px;
+}
+
+.tag-link--large .tag-link__text {
+  max-width: 160px;
+}
+
+/* Tag Count */
+.tag-link__count {
+  background: rgba(255, 255, 255, 0.3);
+  color: inherit;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.75em;
+  font-weight: 600;
+  min-width: 1.25rem;
+  text-align: center;
+  line-height: 1;
+}
+
+.tag-link--default .tag-link__count {
+  background: var(--bg-tertiary, #f1f3f4);
+  color: var(--text-secondary, #6b7280);
+}
+
+.tag-link--default.tag-link--active .tag-link__count {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.tag-link--inline .tag-link__count {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent-color, #3b82f6);
+}
+
+/* Remove Button */
+.tag-link__remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  border: none;
+  background: rgba(0, 0, 0, 0.1);
+  color: currentColor;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  margin-left: 0.125rem;
+}
+
+.tag-link__remove:hover {
+  background: rgba(0, 0, 0, 0.2);
+  transform: scale(1.1);
+}
+
+.tag-link--badge .tag-link__remove {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.tag-link--badge .tag-link__remove:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Tag List */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.tag-list__more {
+  font-size: 0.75rem;
+  color: var(--text-tertiary, #9ca3af);
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  background: var(--bg-secondary, #f8f9fa);
+  border-radius: 0.25rem;
+}
+
+/* Content Tags */
+.content-tags {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.content-tags--inline {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.content-tags__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.content-tags--inline .content-tags__label {
+  margin-bottom: 0;
+}
+
+/* Filter Chip Specific Styles */
+.filter-chip {
+  background: var(--accent-color, #3b82f6);
+  color: white;
+  border-radius: 9999px;
+}
+
+.filter-chip:hover {
+  background: var(--accent-color-hover, #2563eb);
+}
+
+.filter-chip .tag-link__remove {
+  background: rgba(255, 255, 255, 0.25);
+  margin-left: 0.25rem;
+}
+
+.filter-chip .tag-link__remove:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .tag-list {
+    gap: 0.375rem;
+  }
+
+  .tag-link__text {
+    max-width: 100px;
+  }
+
+  .tag-link--small .tag-link__text {
+    max-width: 60px;
+  }
+
+  .tag-link--large .tag-link__text {
+    max-width: 120px;
+  }
+
+  .content-tags--inline {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tag-list {
+    gap: 0.25rem;
+  }
+
+  .tag-link {
+    font-size: 0.75rem;
+  }
+
+  .tag-link--medium {
+    font-size: 0.75rem;
+    padding: 0.1875rem 0.375rem;
+  }
+
+  .tag-link--large {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .tag-link__text {
+    max-width: 80px;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .tag-link--default {
+    border-width: 2px;
+  }
+
+  .tag-link--badge {
+    border: 2px solid transparent;
+  }
+
+  .tag-link--badge.tag-link--active {
+    border-color: var(--success-color, #10b981);
+  }
+
+  .tag-link__remove {
+    border: 1px solid currentColor;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .tag-link,
+  .tag-link__remove {
+    transition: none;
+  }
+
+  .tag-link--default:hover,
+  .tag-link--badge:hover {
+    transform: none;
+  }
+
+  .tag-link__remove:hover {
+    transform: none;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .tag-link--default {
+    background: var(--bg-secondary-dark, #374151);
+    color: var(--text-secondary-dark, #d1d5db);
+    border-color: var(--border-color-dark, #4b5563);
+  }
+
+  .tag-link--default:hover {
+    background: var(--bg-accent-dark, #4b5563);
+    color: var(--text-primary-dark, #f9fafb);
+  }
+
+  .tag-link--minimal {
+    color: var(--text-tertiary-dark, #9ca3af);
+  }
+
+  .tag-link--minimal:hover {
+    color: var(--text-secondary-dark, #d1d5db);
+    background: var(--bg-secondary-dark, #374151);
+  }
+
+  .tag-list__more {
+    background: var(--bg-secondary-dark, #374151);
+    color: var(--text-tertiary-dark, #9ca3af);
+  }
+}
