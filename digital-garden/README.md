@@ -2,7 +2,7 @@
 
 A modern digital garden built with React and D3.js that transforms traditional content navigation into an interactive exploration experience. Unlike conventional blogs or wikis, this system presents content through a unified graph visualization where ideas connect naturally through relationships rather than hierarchical navigation.
 
-## 🌱 What is a Digital Garden?
+## What is a Digital Garden?
 
 This digital garden embraces the philosophy of **learning in public** and **connecting ideas**. Rather than organizing content chronologically like a blog, it creates a living network where:
 
@@ -11,7 +11,7 @@ This digital garden embraces the philosophy of **learning in public** and **conn
 - **Discovery happens through exploration** rather than traditional navigation
 - **Knowledge compounds** as new content links to existing ideas
 
-## ✨ Key Features
+## Key Features
 
 ### Unified Exploration Interface
 - **Single Home Page**: Combines graph visualization, filtering, and timeline in one view
@@ -42,7 +42,7 @@ This digital garden embraces the philosophy of **learning in public** and **conn
 - **Rich Content Cards**: Preview content with metadata, tags, and excerpts
 - **Clickable Tags**: Tags in timeline entries trigger graph filtering
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js 18+ and npm
@@ -92,7 +92,7 @@ Tags help organize content and create relationships. This note is tagged with `e
 
 2. Restart the development server (`npm start`) to see your content appear in the graph
 
-## 📝 Content Authoring Guide
+## Content Authoring Guide
 
 ### Frontmatter Schema
 
@@ -136,7 +136,7 @@ Link to content with special characters: [[volatility-based decomposition]]
 4. **Write Evergreen Content**: Focus on ideas that can grow and evolve
 5. **Cross-Reference Ideas**: Look for opportunities to connect new content to existing notes
 
-## 🏗️ System Architecture
+## System Architecture
 
 ### Build-time Content Processing
 
@@ -174,7 +174,7 @@ ContentView (Individual Content Pages)
 3. **Real-time Filtering**: Filter state affects all components simultaneously
 4. **URL Synchronization**: Filter state persists in URL for sharing
 
-## 🎨 Technology Stack
+## Technology Stack
 
 ### Core Technologies
 - **React 19.1.0**: Modern React with concurrent features
@@ -192,7 +192,7 @@ ContentView (Individual Content Pages)
 - **Responsive Design**: Mobile-friendly layouts (future enhancement)
 - **CSS Grid & Flexbox**: Modern layout techniques
 
-## 🚀 Deployment
+## Deployment
 
 ### GitHub Pages Setup
 
@@ -222,7 +222,7 @@ Set the `homepage` field in `package.json` for proper routing:
 }
 ```
 
-## 🛠️ Development Guide
+## Development Guide
 
 ### Project Structure
 
@@ -275,7 +275,7 @@ digital-garden/
 3. Customize node and link styling in component CSS
 4. Add new interaction modes or filtering options
 
-## 🎯 Configuration & Customization
+## Configuration & Customization
 
 ### Content Indexing Options
 
@@ -312,7 +312,7 @@ For large content collections (200+ files):
 - Add virtualization for timeline view
 - Consider content pagination
 
-## 📖 Usage Examples
+## Usage Examples
 
 ### Research Notes
 Perfect for academic research, technical documentation, or personal knowledge management where connections between ideas matter more than publication order.
@@ -326,7 +326,7 @@ Build interconnected story worlds, character development, or thematic exploratio
 ### Learning Journals
 Document learning journeys where new concepts build on previous knowledge, creating a visual map of intellectual growth.
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/amazing-feature`
@@ -334,11 +334,11 @@ Document learning journeys where new concepts build on previous knowledge, creat
 4. Push to branch: `git push origin feature/amazing-feature`
 5. Open a Pull Request
 
-## 📄 License
+## License
 
 This project is open source and available under the [MIT License](LICENSE).
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **D3.js Community**: For the incredible data visualization library
 - **Digital Garden Movement**: For inspiring a new way to think about knowledge sharing
