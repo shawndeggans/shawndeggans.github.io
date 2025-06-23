@@ -114,7 +114,6 @@ export const HomePage: React.FC<HomePageProps> = ({ className }) => {
           <div className="graph-section__visualization">
             <UnifiedGraph 
               data={filteredData}
-              filterState={filterState}
             />
           </div>
         </section>

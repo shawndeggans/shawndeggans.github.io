@@ -8,7 +8,6 @@ import {
   getDefaultTagGraphConfig,
   filterTagGraph,
   detectTagClusters,
-  getTagStats,
 } from '../../utils/tagGraphData';
 import { TagNode } from '../../types/tagGraph';
 import './TagGraphView.css';
@@ -79,11 +78,6 @@ export const TagGraphView: React.FC = () => {
     };
   }, [fullTagGraph, filteredTagGraph]);
 
-  // Get all content tagged with the selected tag
-  const getContentForTag = (tagId: string): string[] => {
-    const tagNode = fullTagGraph.nodes.find(node => node.id === tagId);
-    return tagNode ? tagNode.connectedContent : [];
-  };
 
   // Handle tag click - could navigate to filtered content view
   const handleTagClick = (tag: TagNode) => {

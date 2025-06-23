@@ -308,8 +308,7 @@ export class GraphDataProcessor {
     const statistics = this.calculateFilterStatistics(
       graphData, 
       filteredNodes, 
-      filteredLinks, 
-      filterState
+      filteredLinks
     );
 
     return {
@@ -479,8 +478,7 @@ export class GraphDataProcessor {
   private calculateFilterStatistics(
     originalData: UnifiedGraphData, 
     filteredNodes: UnifiedNode[], 
-    filteredLinks: UnifiedLink[],
-    filterState: FilterState
+    filteredLinks: UnifiedLink[]
   ): FilterStatistics {
     const nodeTypeCounts: Record<string, number> = {};
     const tagCounts: Record<string, number> = {};

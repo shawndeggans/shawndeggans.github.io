@@ -33,18 +33,49 @@
     "build": "react-scripts build",
     "build:ci": "CI=false npm run prebuild && react-scripts build",
     "test": "react-scripts test",
+    "test:watch": "react-scripts test --watchAll",
+    "test:coverage": "react-scripts test --coverage --watchAll=false",
+    "test:ci": "CI=true react-scripts test --coverage",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "quality": "npm run typecheck && npm run lint && npm run test:ci",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
   "devDependencies": {
     "@types/node": "^22.15.18",
-    "gh-pages": "^6.3.0"
+    "gh-pages": "^6.3.0",
+    "msw": "^2.10.2",
+    "text-encoding": "^0.7.0"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
+    ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}",
+      "!src/**/*.d.ts",
+      "!src/index.tsx",
+      "!src/reportWebVitals.ts",
+      "!src/react-app-env.d.ts",
+      "!src/mocks/**",
+      "!src/test-utils/**"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(react-markdown|remark-gfm|rehype-raw|rehype-sanitize|micromark|markdown-table|mdast-util|micromark-util|decode-named-character-reference|character-entities|unist-util|vfile|bail|is-plain-obj|trough|unified|zwitch|longest-streak|mdast-util-to-string|property-information|hast-util|web-namespaces|space-separated-tokens|comma-separated-tokens|html-void-elements|ccount|escape-string-regexp|trim-lines|devlop)/)"
     ]
   },
   "browserslist": {

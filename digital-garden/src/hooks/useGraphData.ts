@@ -7,7 +7,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { UnifiedGraphData, UnifiedNode, UnifiedLink } from '../types/unifiedGraph';
-import { FilteredData, FilterState } from '../types/filter';
+import { FilteredData } from '../types/filter';
 import { graphDataProcessor } from '../utils/graphDataProcessor';
 import { tagRelationshipEngine } from '../utils/tagRelationshipEngine';
 import { useFilterState } from './useFilterState';

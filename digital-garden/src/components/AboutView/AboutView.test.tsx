@@ -1,0 +1,246 @@
+import { screen, waitFor } from '@testing-library/react';
+import { render } from '../../test-utils/test-utils';
+import AboutView from './AboutView';
+import { server } from '../../mocks/server';
+import { http, HttpResponse } from 'msw';
+import { getMockParsedContent } from '../../test-utils/factories';
+
+// Mock the useContent hook with different states
+const mockUseContent = jest.fn();
+jest.mock('../../hooks/useContent', () => ({
+  useContent: () => mockUseContent(),
+}));
+
+describe('AboutView behavior', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should display loading state while content is being fetched', () => {
+    mockUseContent.mockReturnValue({
+      getContent: jest.fn().mockReturnValue(null),
+      loading: true,
+      error: null,
+    });
+
+    render(<AboutView />);
+    
+    expect(screen.getByText('Loading about page...')).toBeInTheDocument();
+    expect(screen.getByText('Loading about page...')).toBeInTheDocument();
+  });
+
+  it('should display error message when content fails to load', () => {
+    mockUseContent.mockReturnValue({
+      getContent: jest.fn().mockReturnValue(null),
+      loading: false,
+      error: 'Network error occurred',
+    });
+
+    render(<AboutView />);
+    
+    expect(screen.getByText('Error Loading About Page')).toBeInTheDocument();
+    expect(screen.getByText('Network error occurred')).toBeInTheDocument();
+  });
+
+  it('should display not found message when about content is not available', () => {
+    mockUseContent.mockReturnValue({
+      getContent: jest.fn().mockReturnValue(null),
+      loading: false,
+      error: null,
+    });
+
+    render(<AboutView />);
+    
+    expect(screen.getByText('About Page Not Found')).toBeInTheDocument();
+    expect(screen.getByText('The about page content could not be loaded.')).toBeInTheDocument();
+  });
+
+  it('should display about content when successfully loaded', () => {
+    const mockAboutContent = getMockParsedContent({
+      metadata: {
+        title: 'About This Digital Garden',
+        date: '2024-01-14',
+        tags: ['about', 'meta'],
+        description: 'Information about this digital garden',
+      },
+      content: '# Welcome\n\nThis is my digital garden where I share my thoughts and learnings.\n\n## Purpose\n\nTo document and connect ideas.',
+      slug: 'about',
+    });
+
+    mockUseContent.mockReturnValue({
+      getContent: jest.fn().mockReturnValue(mockAboutContent),
+      loading: false,
+      error: null,
+    });
+
+    render(<AboutView />);
+    
+    expect(screen.getByText('About This Digital Garden')).toBeInTheDocument();
+    expect(screen.getByText('January 14, 2024')).toBeInTheDocument();
+    expect(screen.getByText('Welcome')).toBeInTheDocument();
+    expect(screen.getByText(/This is my digital garden/)).toBeInTheDocument();
+    expect(screen.getByText('Purpose')).toBeInTheDocument();
+  });
+
+  it('should render markdown content correctly', () => {
+    const mockAboutContent = getMockParsedContent({
+      metadata: {
+        title: 'About',
+        date: '2024-01-01',
+        tags: [],
+      },
+      content: '# Main Heading\n\n**Bold text** and *italic text*\n\n- List item 1\n- List item 2\n\n[Link example](https://example.com)',
+      slug: 'about',
+    });
+
+    mockUseContent.mockReturnValue({
+      getContent: jest.fn().mockReturnValue(mockAboutContent),
+      loading: false,
+      error: null,
+    });
+
+    render(<AboutView />);
+    
+    expect(screen.getByRole('heading', { level: 1, name: 'About' })).toBeInTheDocument(); // Page title
+    expect(screen.getByRole('heading', { level: 1, name: 'Main Heading' })).toBeInTheDocument(); // Markdown heading
+    expect(screen.getByText('Bold text')).toBeInTheDocument();
+    expect(screen.getByText('italic text')).toBeInTheDocument();
+    expect(screen.getByText('List item 1')).toBeInTheDocument();
+    expect(screen.getByText('List item 2')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Link example' })).toBeInTheDocument();
+  });
+
+  it('should not display date when not provided in metadata', () => {
+    const mockAboutContent = getMockParsedContent({
+      metadata: {
+        title: 'About Without Date',
+        date: '',
+        tags: [],
+      },
+      content: 'Content without date',
+      slug: 'about',
+    });
+
+    mockUseContent.mockReturnValue({
+      getContent: jest.fn().mockReturnValue(mockAboutContent),
+      loading: false,
+      error: null,
+    });
+
+    render(<AboutView />);
+    
+    expect(screen.getByText('About Without Date')).toBeInTheDocument();
+    expect(screen.queryByRole('time')).not.toBeInTheDocument();
+  });
+
+  it('should format date correctly', () => {
+    const mockAboutContent = getMockParsedContent({
+      metadata: {
+        title: 'About',
+        date: '2024-12-25',
+        tags: [],
+      },
+      content: 'Christmas content',
+      slug: 'about',
+    });
+
+    mockUseContent.mockReturnValue({
+      getContent: jest.fn().mockReturnValue(mockAboutContent),
+      loading: false,
+      error: null,
+    });
+
+    render(<AboutView />);
+    
+    const timeElement = screen.getByRole('time');
+    expect(timeElement).toHaveTextContent('December 25, 2024');
+    expect(timeElement).toHaveClass('about-date');
+  });
+
+  it('should have proper semantic HTML structure', () => {
+    const mockAboutContent = getMockParsedContent({
+      metadata: {
+        title: 'Semantic About',
+        date: '2024-01-01',
+        tags: [],
+      },
+      content: 'Semantic content',
+      slug: 'about',
+    });
+
+    mockUseContent.mockReturnValue({
+      getContent: jest.fn().mockReturnValue(mockAboutContent),
+      loading: false,
+      error: null,
+    });
+
+    render(<AboutView />);
+    
+    expect(screen.getByRole('article')).toBeInTheDocument();
+    expect(screen.getByRole('banner')).toBeInTheDocument(); // header element
+    expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole('time')).toBeInTheDocument();
+  });
+
+  it('should handle empty content gracefully', () => {
+    const mockAboutContent = getMockParsedContent({
+      metadata: {
+        title: 'Empty About',
+        date: '2024-01-01',
+        tags: [],
+      },
+      content: '',
+      slug: 'about',
+    });
+
+    mockUseContent.mockReturnValue({
+      getContent: jest.fn().mockReturnValue(mockAboutContent),
+      loading: false,
+      error: null,
+    });
+
+    render(<AboutView />);
+    
+    expect(screen.getByText('Empty About')).toBeInTheDocument();
+    expect(screen.getByRole('article')).toBeInTheDocument();
+    
+    // Content area should exist even if empty
+    const aboutBody = document.querySelector('.about-body');
+    expect(aboutBody).toBeInTheDocument();
+  });
+
+  it('should call getContent with correct slug', () => {
+    const mockGetContent = jest.fn().mockReturnValue(null);
+    
+    mockUseContent.mockReturnValue({
+      getContent: mockGetContent,
+      loading: false,
+      error: null,
+    });
+
+    render(<AboutView />);
+    
+    expect(mockGetContent).toHaveBeenCalledWith('about');
+  });
+
+  it('should apply correct CSS classes', () => {
+    const mockAboutContent = getMockParsedContent({
+      metadata: { title: 'Test', date: '2024-01-01', tags: [] },
+      content: 'Test content',
+      slug: 'about',
+    });
+
+    mockUseContent.mockReturnValue({
+      getContent: jest.fn().mockReturnValue(mockAboutContent),
+      loading: false,
+      error: null,
+    });
+
+    const { container } = render(<AboutView />);
+    
+    expect(container.querySelector('.about-view')).toBeInTheDocument();
+    expect(container.querySelector('.about-content')).toBeInTheDocument();
+    expect(container.querySelector('.about-header')).toBeInTheDocument();
+    expect(container.querySelector('.about-body')).toBeInTheDocument();
+  });
+});

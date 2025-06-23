@@ -4,7 +4,7 @@ import { ParsedContent, ContentMetadata } from '../types/content';  // Removed u
 const DOUBLE_BRACKET_REGEX = /\[\[([^\]]+)\]\]/g;
 
 // Simple frontmatter parser for browser compatibility
-function parseFrontmatter(fileContent: string): { data: any; content: string } {
+function parseFrontmatter(fileContent: string): { data: Record<string, unknown>; content: string } {
   const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
   const match = fileContent.match(frontmatterRegex);
   
@@ -13,7 +13,7 @@ function parseFrontmatter(fileContent: string): { data: any; content: string } {
   }
   
   const [, yamlString, content] = match;
-  const data: any = {};
+  const data: Record<string, unknown> = {};
   
   // Simple YAML parser (handles basic key: value pairs)
   const lines = yamlString.split('\n');
@@ -125,7 +125,7 @@ export function parseMarkdown(fileContent: string, slug: string): ParsedContent 
  * Replace double-bracket links with regular markdown links
  */
 export function processDoubleLinks(content: string, baseUrl: string = '/#/content'): string {
-  return content.replace(DOUBLE_BRACKET_REGEX, (match, linkText) => {
+  return content.replace(DOUBLE_BRACKET_REGEX, (_, linkText) => {
     const slug = convertToSlug(linkText.trim());
     return `[${linkText}](${baseUrl}/${slug})`;
   });

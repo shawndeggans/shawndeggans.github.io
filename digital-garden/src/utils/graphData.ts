@@ -31,7 +31,7 @@ export function transformContentToGraphData(
   });
   
   // Create links from connections and generate IDs
-  links.forEach((link, index) => {
+  links.forEach((link) => {
     // Only include links where both nodes exist AND neither is excluded
     if (contentMap.has(link.from) && 
         contentMap.has(link.to) && 

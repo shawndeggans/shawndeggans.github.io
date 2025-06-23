@@ -156,7 +156,7 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({
     if (!svgRef.current || !data.nodes.length) return;
 
     const svg = d3.select(svgRef.current);
-    const { width, height, colors, nodeRadius } = config;
+    const { colors, nodeRadius } = config;
 
     // Clear previous content
     svg.selectAll("*").remove();
@@ -211,9 +211,9 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({
 
     // Simplified Obsidian-style interactions
     nodeElements
-      .on('mouseover', (event, d) => handleNodeHover(d))
+      .on('mouseover', (_, d) => handleNodeHover(d))
       .on('mouseout', () => handleNodeHover(null))
-      .on('click', (event, d) => {
+      .on('click', (_, d) => {
         // Simple click handler - no drag conflicts
         onNodeClick(d);
       })
@@ -234,7 +234,7 @@ export const GraphVisualization: React.FC<GraphVisualizationProps> = ({
           d.fx = event.x;
           d.fy = event.y;
         })
-        .on('end', (event, d) => {
+        .on('end', (event, _) => {
           if (!event.active && simulation) simulation.alphaTarget(0);
           // Keep node fixed after dragging (sticky behavior)
         })

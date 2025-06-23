@@ -255,7 +255,7 @@ export class TagRelationshipEngine {
       documentId: content.id,
       documentTitle: content.title,
       otherTags: content.tags.filter(t => t !== tag1 && t !== tag2),
-      relevanceScore: this.calculateContextRelevance(content.tags, tag1, tag2)
+      relevanceScore: this.calculateContextRelevance(content.tags)
     };
     relationship.contexts.push(context);
 
@@ -289,7 +289,7 @@ export class TagRelationshipEngine {
     relationship.strength = Math.min(relationship.strength, 1);
   }
 
-  private calculateContextRelevance(allTags: string[], tag1: string, tag2: string): number {
+  private calculateContextRelevance(allTags: string[]): number {
     // More tags in common context = higher relevance
     // Fewer total tags = more focused context
     const otherTagCount = allTags.length - 2; // Exclude the two tags we're analyzing
@@ -347,7 +347,7 @@ export class TagRelationshipEngine {
     const processedTags = new Set<string>();
     const clusters: TagCluster[] = [];
 
-    for (const [tag, metrics] of this.tagMetrics) {
+    for (const [tag] of this.tagMetrics) {
       if (processedTags.has(tag)) {
         continue;
       }

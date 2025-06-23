@@ -5,24 +5,22 @@
  * Supports full-width display, interactive exploration, and filtering.
  */
 
-import React, { useRef, useEffect, useState, useMemo } from 'react';
+import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as d3 from 'd3';
 import { 
   UnifiedNode, 
-  UnifiedLink, 
   NodeSimulationData, 
   LinkSimulationData,
   isContentNode,
   isTagNode 
 } from '../../types/unifiedGraph';
-import { FilteredData, FilterState } from '../../types/filter';
+import { FilteredData } from '../../types/filter';
 import { useFilterState } from '../../hooks/useFilterState';
 import './UnifiedGraph.css';
 
 interface UnifiedGraphProps {
   data: FilteredData;
-  filterState: FilterState;
   className?: string;
   onNodeClick?: (node: UnifiedNode) => void;
   onNodeHover?: (node: UnifiedNode | null) => void;
@@ -30,7 +28,6 @@ interface UnifiedGraphProps {
 
 export const UnifiedGraph: React.FC<UnifiedGraphProps> = ({
   data,
-  filterState,
   className,
   onNodeClick,
   onNodeHover
@@ -42,8 +39,8 @@ export const UnifiedGraph: React.FC<UnifiedGraphProps> = ({
 
   // Local state for visualization
   const [dimensions, setDimensions] = useState({ width: 800, height: 400 });
-  const [hoveredNode, setHoveredNode] = useState<string | null>(null);
-  const [selectedNode, setSelectedNode] = useState<string | null>(null);
+  const [, setHoveredNode] = useState<string | null>(null);
+  const [, setSelectedNode] = useState<string | null>(null);
 
   // Memoized graph configuration
   const graphConfig = useMemo(() => ({
@@ -96,6 +93,17 @@ export const UnifiedGraph: React.FC<UnifiedGraphProps> = ({
 
     return () => resizeObserver.disconnect();
   }, []);
+
+  // Handle node click behavior
+  const handleNodeClick = useCallback((node: UnifiedNode) => {
+    if (isContentNode(node)) {
+      // Navigate to content page
+      navigate(`/content/${node.id}`);
+    } else if (isTagNode(node)) {
+      // Add tag to filter
+      addTag(node.label);
+    }
+  }, [navigate, addTag]);
 
   // Main D3 visualization effect
   useEffect(() => {
@@ -370,18 +378,7 @@ export const UnifiedGraph: React.FC<UnifiedGraphProps> = ({
       simulation.stop();
     };
 
-  }, [data, dimensions, graphConfig, onNodeClick, onNodeHover, addTag, navigate]);
-
-  // Handle node click behavior
-  const handleNodeClick = (node: UnifiedNode) => {
-    if (isContentNode(node)) {
-      // Navigate to content page
-      navigate(`/content/${node.id}`);
-    } else if (isTagNode(node)) {
-      // Add tag to filter
-      addTag(node.label);
-    }
-  };
+  }, [data, dimensions, graphConfig, onNodeClick, onNodeHover, addTag, navigate, handleNodeClick]);
 
   // Loading state
   if (!data || data.nodes.length === 0) {

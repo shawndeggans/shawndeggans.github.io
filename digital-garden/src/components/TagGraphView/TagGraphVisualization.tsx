@@ -73,7 +73,7 @@ export const TagGraphVisualization: React.FC<TagGraphVisualizationProps> = ({
     if (!svgRef.current || !data.nodes.length) return;
 
     const svg = d3.select(svgRef.current);
-    const { width, height, colors, nodeRadius } = config;
+    const { colors, nodeRadius } = config;
 
     // Clear previous content
     svg.selectAll("*").remove();
@@ -203,7 +203,7 @@ export const TagGraphVisualization: React.FC<TagGraphVisualizationProps> = ({
         d.fy = undefined;
         if (simulation) simulation.alpha(0.3).restart();
       })
-      .on('mouseenter', (event, d) => {
+      .on('mouseenter', (_, d) => {
         // Always include the hovered node itself
         const connectedTags = new Set([d.id]);
         
