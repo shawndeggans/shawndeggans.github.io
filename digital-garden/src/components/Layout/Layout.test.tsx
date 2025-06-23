@@ -130,8 +130,9 @@ describe('Layout behavior', () => {
     // Breadcrumb should show converted slug
     expect(screen.getByText('my awesome article')).toBeInTheDocument();
     
-    // Should have link back to graph
-    expect(screen.getByRole('link', { name: 'Graph' })).toBeInTheDocument();
+    // Should have Graph links in both navigation and breadcrumb
+    const graphLinks = screen.getAllByRole('link', { name: 'Graph' });
+    expect(graphLinks).toHaveLength(2); // Navigation + breadcrumb
   });
 
   it('should render multiple children correctly', () => {

@@ -4,6 +4,7 @@ import App from './App';
 describe('App behavior', () => {
   it('should render without crashing', () => {
     render(<App />);
-    expect(screen.getByRole('main')).toBeInTheDocument();
+    // App shows loading state initially, so check for loading text
+    expect(screen.getByText('Loading your digital garden...')).toBeInTheDocument();
   });
 });
