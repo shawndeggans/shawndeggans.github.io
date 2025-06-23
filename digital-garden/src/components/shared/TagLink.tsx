@@ -90,6 +90,49 @@ export const TagLink: React.FC<TagLinkProps> = ({
     className
   ].filter(Boolean).join(' ');
 
+  if (removable) {
+    // When removable, use div container with separate buttons to avoid nesting
+    return (
+      <div className={baseClasses} role="group" aria-label={`Tag: ${tag}`}>
+        <button
+          type="button"
+          className="tag-link__main"
+          onClick={handleClick}
+          disabled={disabled}
+          title={disabled ? undefined : `Filter by "${tag}"`}
+          aria-label={`Filter content by tag: ${tag}`}
+        >
+          <span className="tag-link__text">
+            {tag}
+          </span>
+          
+          {showCount && count !== undefined && (
+            <span className="tag-link__count">
+              {count}
+            </span>
+          )}
+        </button>
+        
+        <button
+          type="button"
+          className="tag-link__remove"
+          onClick={handleRemove}
+          aria-label={`Remove tag: ${tag}`}
+          title={`Remove ${tag} filter`}
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path
+              d="M9 3L3 9M3 3L9 9"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </svg>
+        </button>
+      </div>
+    );
+  }
+
   return (
     <button
       type="button"
@@ -107,25 +150,6 @@ export const TagLink: React.FC<TagLinkProps> = ({
         <span className="tag-link__count">
           {count}
         </span>
-      )}
-      
-      {removable && (
-        <button
-          type="button"
-          className="tag-link__remove"
-          onClick={handleRemove}
-          aria-label={`Remove tag: ${tag}`}
-          title={`Remove ${tag} filter`}
-        >
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path
-              d="M9 3L3 9M3 3L9 9"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-          </svg>
-        </button>
       )}
     </button>
   );

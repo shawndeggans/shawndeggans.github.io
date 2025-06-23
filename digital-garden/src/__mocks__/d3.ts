@@ -38,7 +38,7 @@ export const select = jest.fn(() => ({
   node: jest.fn(() => ({ getBoundingClientRect: () => ({ width: 800, height: 600 }) })),
 }));
 
-export const scaleOrdinal = jest.fn(() => jest.fn((x: unknown) => '#000000'));
+export const scaleOrdinal = jest.fn(() => jest.fn((_x: unknown) => '#000000'));
 
 export const schemeCategory10 = ['#1f77b4', '#ff7f0e', '#2ca02c'];
 

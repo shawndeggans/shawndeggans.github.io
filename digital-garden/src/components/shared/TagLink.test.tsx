@@ -1,4 +1,4 @@
-import { screen, waitFor, fireEvent } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import { render } from '../../test-utils/test-utils';
 import { TagLink, TagList, ContentTags, FilterChip } from './TagLink';
 

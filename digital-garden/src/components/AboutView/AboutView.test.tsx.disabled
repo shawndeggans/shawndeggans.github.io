@@ -1,8 +1,6 @@
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { render } from '../../test-utils/test-utils';
 import AboutView from './AboutView';
-import { server } from '../../mocks/server';
-import { http, HttpResponse } from 'msw';
 import { getMockParsedContent } from '../../test-utils/factories';
 
 // Mock the useContent hook with different states
