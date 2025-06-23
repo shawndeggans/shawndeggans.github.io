@@ -27,7 +27,7 @@ const ContentView: React.FC = () => {
   const [content, setContent] = useState(getContent(slug || ''));
 
   // Enhanced backlinks state
-  const [backlinkFilters, setBacklinkFilters] = useState<BacklinkFilters>({
+  const [backlinkFilters] = useState<BacklinkFilters>({
     search: '',
     tags: [],
     dateRange: {},

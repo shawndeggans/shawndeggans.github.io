@@ -110,7 +110,7 @@ export const GraphView: React.FC = () => {
         </div>
       )}
 
-      <div className="graph-container">
+      <div className="graph-container" data-testid="graph-container">
         <GraphVisualization
           data={graphData}
           config={graphConfig}

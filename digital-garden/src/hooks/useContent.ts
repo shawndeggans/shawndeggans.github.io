@@ -46,12 +46,20 @@ export function useContent(): UseContentReturn {
       
       // Create a title-to-id mapping for internal link resolution
       const titleToIdMap = new Map<string, string>();
-      contentIndex.files.forEach((file: any) => {
+      contentIndex.files.forEach((file: { title: string; id: string }) => {
         titleToIdMap.set(file.title, file.id);
       });
       
       // Transform the content index format to ParsedContent format
-      contentIndex.files.forEach((file: any) => {
+      contentIndex.files.forEach((file: {
+        id: string;
+        title: string;
+        date: string;
+        tags?: string[];
+        description?: string;
+        body: string;
+        internalLinks?: string[];
+      }) => {
         // Convert internal link titles to IDs
         const outboundLinks = (file.internalLinks || [])
           .map((linkTitle: string) => titleToIdMap.get(linkTitle))

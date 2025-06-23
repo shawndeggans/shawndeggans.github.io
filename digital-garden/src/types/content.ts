@@ -4,7 +4,7 @@ export interface ContentMetadata {
   tags: string[];
   slug?: string;
   description?: string;
-  [key: string]: any;
+  [key: string]: string | string[] | undefined;
 }
 
 export interface ParsedContent {

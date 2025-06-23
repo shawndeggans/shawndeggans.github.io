@@ -157,7 +157,7 @@ export interface FilterValidation {
 export interface FilterValidationError {
   field: keyof FilterState;
   message: string;
-  value: any;
+  value: unknown;
 }
 
 export interface FilterValidationWarning {

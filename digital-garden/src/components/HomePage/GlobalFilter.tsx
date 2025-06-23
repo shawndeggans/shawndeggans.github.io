@@ -5,10 +5,9 @@
  * Supports search text, tag selection, date ranges, and URL synchronization.
  */
 
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { useFilterState } from '../../hooks/useFilterState';
 import { useTagData } from '../../hooks/useGraphData';
-import { DateRange } from '../../types/filter';
 import './GlobalFilter.css';
 
 interface GlobalFilterProps {
@@ -23,7 +22,6 @@ export const GlobalFilter: React.FC<GlobalFilterProps> = ({
   const {
     filterState,
     setSearchText,
-    addTag,
     removeTag,
     toggleTag,
     setDateRange,
@@ -32,7 +30,7 @@ export const GlobalFilter: React.FC<GlobalFilterProps> = ({
     isFilterActive
   } = useFilterState();
 
-  const { allTags, getRelatedTags } = useTagData();
+  const { allTags } = useTagData();
 
   // Calculate tag frequencies for tag cloud
   const tagFrequencies = useMemo(() => {
@@ -53,61 +51,17 @@ export const GlobalFilter: React.FC<GlobalFilterProps> = ({
   }, [tagFrequencies]);
 
   // Local state for UI interactions
-  const [showTagSuggestions, setShowTagSuggestions] = useState(false);
-  const [tagInput, setTagInput] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
 
   // Refs for managing focus and clicks
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const tagInputRef = useRef<HTMLInputElement>(null);
-  const tagSuggestionsRef = useRef<HTMLDivElement>(null);
 
   // Handle search input changes
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
 
-  // Handle tag input changes
-  const handleTagInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setTagInput(value);
-    
-    // Show suggestions when typing
-    if (value.length > 0) {
-      setShowTagSuggestions(true);
-    } else {
-      setShowTagSuggestions(false);
-    }
-  };
-
-  // Handle tag input key events
-  const handleTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && tagInput.trim()) {
-      e.preventDefault();
-      const trimmedTag = tagInput.trim();
-      
-      if (!hasTag(trimmedTag)) {
-        addTag(trimmedTag);
-      }
-      
-      setTagInput('');
-      setShowTagSuggestions(false);
-    } else if (e.key === 'Escape') {
-      setTagInput('');
-      setShowTagSuggestions(false);
-      tagInputRef.current?.blur();
-    }
-  };
-
-  // Handle tag suggestion click
-  const handleTagSuggestionClick = (tag: string) => {
-    if (!hasTag(tag)) {
-      addTag(tag);
-    }
-    setTagInput('');
-    setShowTagSuggestions(false);
-  };
 
   // Handle date range changes
   const handleDateRangeChange = (start: string, end: string) => {
@@ -123,36 +77,8 @@ export const GlobalFilter: React.FC<GlobalFilterProps> = ({
     }
   };
 
-  // Filter tag suggestions based on input
-  const getFilteredTagSuggestions = () => {
-    if (!tagInput) return allTags.slice(0, 8);
-    
-    const inputLower = tagInput.toLowerCase();
-    return allTags
-      .filter(tag => 
-        tag.toLowerCase().includes(inputLower) && 
-        !hasTag(tag)
-      )
-      .slice(0, 8);
-  };
 
-  // Handle clicks outside tag suggestions
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        tagSuggestionsRef.current && 
-        !tagSuggestionsRef.current.contains(event.target as Node) &&
-        !tagInputRef.current?.contains(event.target as Node)
-      ) {
-        setShowTagSuggestions(false);
-      }
-    };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const tagSuggestions = getFilteredTagSuggestions();
 
   return (
     <div className={`global-filter ${compact ? 'global-filter--compact' : ''} ${className || ''}`}>
