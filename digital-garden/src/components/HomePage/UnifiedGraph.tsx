@@ -45,11 +45,11 @@ export const UnifiedGraph: React.FC<UnifiedGraphProps> = ({
   // Memoized graph configuration
   const graphConfig = useMemo(() => ({
     nodeRadius: 6,
-    linkDistance: 40,
-    chargeStrength: -100,
-    centerStrength: 0.3,
-    collisionRadius: 10,
-    
+    linkDistance: 60,           // Increased for better spacing
+    chargeStrength: -200,        // Increased repulsion for less overlap
+    centerStrength: 0.15,        // Reduced to allow more spread
+    collisionRadius: 15,         // Increased to prevent overlapping
+
     // Visual styling (uniform across all node types)
     nodeStyle: {
       fill: '#3b82f6',
@@ -57,13 +57,13 @@ export const UnifiedGraph: React.FC<UnifiedGraphProps> = ({
       strokeWidth: 2,
       opacity: 1
     },
-    
+
     linkStyle: {
       stroke: '#e5e7eb',
       strokeWidth: 1,
       opacity: 0.4
     },
-    
+
     // Highlight styles
     highlightStyle: {
       nodeOpacity: 1,
@@ -114,7 +114,7 @@ export const UnifiedGraph: React.FC<UnifiedGraphProps> = ({
 
     const { width, height } = dimensions;
 
-    // Create simulation data with positions
+    // Create simulation data with better initial positions
     // Debug: Log node counts by type
     console.log('Graph data:', {
       totalNodes: data.nodes.length,
@@ -122,11 +122,16 @@ export const UnifiedGraph: React.FC<UnifiedGraphProps> = ({
       tagNodes: data.nodes.filter(n => n.type === 'tag').length
     });
 
-    const nodes: NodeSimulationData[] = data.nodes.map(node => ({
-      ...node,
-      x: width / 2 + (Math.random() - 0.5) * 50,
-      y: height / 2 + (Math.random() - 0.5) * 50
-    }));
+    // Better initial positioning - spread nodes in a circle
+    const nodes: NodeSimulationData[] = data.nodes.map((node, i) => {
+      const angle = (i / data.nodes.length) * 2 * Math.PI;
+      const radius = Math.min(width, height) * 0.3;
+      return {
+        ...node,
+        x: width / 2 + Math.cos(angle) * radius,
+        y: height / 2 + Math.sin(angle) * radius
+      };
+    });
 
     const links: LinkSimulationData[] = data.links.map(link => ({
       ...link,
@@ -134,26 +139,35 @@ export const UnifiedGraph: React.FC<UnifiedGraphProps> = ({
       target: link.target
     }));
 
-    // Create force simulation with better positioning
+    // Create force simulation with optimized parameters
     const simulation = d3.forceSimulation(nodes)
       .force('link', d3.forceLink(links)
         .id((d: any) => d.id)
         .distance(graphConfig.linkDistance)
-        .strength(0.3)
+        .strength(0.4)
       )
       .force('charge', d3.forceManyBody()
         .strength(graphConfig.chargeStrength)
-        .distanceMax(200)
+        .distanceMax(300)
       )
       .force('center', d3.forceCenter(width / 2, height / 2)
         .strength(graphConfig.centerStrength)
       )
       .force('collision', d3.forceCollide()
-        .radius(graphConfig.collisionRadius)
-        .strength(0.8)
+        .radius((d: any) => {
+          // Dynamic collision radius based on node type
+          const baseRadius = d.type === 'content' ?
+            graphConfig.nodeRadius + 1 :
+            graphConfig.nodeRadius;
+          return baseRadius + graphConfig.collisionRadius;
+        })
+        .strength(1.0)
+        .iterations(2)
       )
-      .force('x', d3.forceX(width / 2).strength(0.1))
-      .force('y', d3.forceY(height / 2).strength(0.1));
+      .force('x', d3.forceX(width / 2).strength(0.05))
+      .force('y', d3.forceY(height / 2).strength(0.05))
+      .alphaDecay(0.02)        // Slower cooling for smoother animation
+      .velocityDecay(0.4);     // Higher damping to reduce jitter
 
     // Create main group for zoom/pan
     const g = svg.append('g');
@@ -265,48 +279,13 @@ export const UnifiedGraph: React.FC<UnifiedGraphProps> = ({
 
     svg.call(zoom);
 
-    // Wait for simulation to stabilize before fitting
-    simulation.on('end', () => {
-      const bounds = g.node()?.getBBox();
-      if (bounds && bounds.width > 0 && bounds.height > 0) {
-        const fullWidth = bounds.width;
-        const fullHeight = bounds.height;
-        const midX = bounds.x + fullWidth / 2;
-        const midY = bounds.y + fullHeight / 2;
-        
-        const scale = Math.min(
-          0.8 * width / fullWidth,
-          0.8 * height / fullHeight,
-          1.2
-        );
-        
-        const translate = [
-          width / 2 - scale * midX,
-          height / 2 - scale * midY
-        ];
-
-        svg.transition()
-          .duration(750)
-          .call(
-            zoom.transform,
-            d3.zoomIdentity
-              .translate(translate[0], translate[1])
-              .scale(scale)
-          );
-      }
-    });
-
-    // Start with a reasonable zoom
-    svg.call(
-      zoom.transform,
-      d3.zoomIdentity
-        .translate(width / 2, height / 2)
-        .scale(0.8)
-        .translate(-width / 2, -height / 2)
-    );
+    // Track if we've done the initial fit
+    let hasInitialFit = false;
+    let tickCount = 0;
 
     // Simulation tick handler
     simulation.on('tick', () => {
+      tickCount++;
       linkSelection
         .attr('x1', (d: any) => d.source.x)
         .attr('y1', (d: any) => d.source.y)
@@ -315,6 +294,45 @@ export const UnifiedGraph: React.FC<UnifiedGraphProps> = ({
 
       nodeSelection
         .attr('transform', (d: NodeSimulationData) => `translate(${d.x},${d.y})`);
+
+      // Auto-fit to view after simulation has run for a bit
+      if (!hasInitialFit && tickCount === 100) {
+        hasInitialFit = true;
+
+        const bounds = g.node()?.getBBox();
+        if (bounds && bounds.width > 0 && bounds.height > 0) {
+          const padding = 40;
+          const fullWidth = bounds.width + padding * 2;
+          const fullHeight = bounds.height + padding * 2;
+          const midX = bounds.x + bounds.width / 2;
+          const midY = bounds.y + bounds.height / 2;
+
+          const scale = Math.min(
+            width / fullWidth,
+            height / fullHeight,
+            1.5
+          );
+
+          const translate = [
+            width / 2 - scale * midX,
+            height / 2 - scale * midY
+          ];
+
+          svg.transition()
+            .duration(750)
+            .call(
+              zoom.transform,
+              d3.zoomIdentity
+                .translate(translate[0], translate[1])
+                .scale(scale)
+            );
+        }
+      }
+
+      // Stop simulation after stabilization for performance
+      if (tickCount > 300 || simulation.alpha() < 0.01) {
+        simulation.stop();
+      }
     });
 
     // Drag handlers
